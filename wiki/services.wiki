@@ -1,0 +1,9 @@
+#summary A portál funkciói.
+
+= *Alapszolgáltatások* =
+  * regisztáció
+  * bejelentkezés
+  * jelszó reset / újrakiküldés
+
+  * 
+
