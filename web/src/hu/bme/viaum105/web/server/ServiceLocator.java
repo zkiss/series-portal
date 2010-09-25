@@ -1,0 +1,49 @@
+package hu.bme.viaum105.web.server;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import hu.bme.viaum105.service.SeriesPortalService;
+import hu.bme.viaum105.service.ServerException;
+
+public class ServiceLocator {
+
+    private static ServiceLocator instance;
+
+    public static ServiceLocator getInstance() throws ServerException {
+	try {
+	    if (ServiceLocator.instance == null) {
+		ServiceLocator.instance = new ServiceLocator(new InitialContext());
+	    }
+	    return ServiceLocator.instance;
+	} catch (NamingException e) {
+	    throw new ServerException(e);
+	}
+    }
+
+    private Context context;
+
+    private SeriesPortalService seriesPortalService;
+
+    private ServiceLocator(Context context) {
+	this.context = context;
+    }
+
+    public SeriesPortalService getSeriesPortalService() throws ServerException {
+	if (this.seriesPortalService == null) {
+	    this.seriesPortalService = this.lookup(SeriesPortalService.JNDI_LOCATION, SeriesPortalService.class);
+	}
+	return this.seriesPortalService;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T lookup(String name, Class<T> clazz) throws ServerException {
+	try {
+	    return (T) this.context.lookup(name.startsWith("jms") ? name : "series-portal/" + name + "/remote");
+	} catch (NamingException e) {
+	    throw new ServerException(e);
+	}
+    }
+
+}
