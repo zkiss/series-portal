@@ -1,4 +1,4 @@
-#summary Hibernate tools installálása
+#summary Hibernate tools installálása, használata
 #labels hsqldb,hibernate,hibernatetools
 
 = Installálás =
