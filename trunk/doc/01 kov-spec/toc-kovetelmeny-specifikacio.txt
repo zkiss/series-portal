@@ -1,0 +1,25 @@
+. A feladat pontos szövege
+. Rendszer áttekintés
+	. Architektúra
+	. Biztonság
+	. Felhasználói interfészek
+	. Szoftver interfészek
+. Felhasznált technológiák
+	. Java EE 5
+		. JPA
+		. EJB
+		. Java Servlet Technology
+		. JBoss
+	. HSQLDB - mert kicsi és a projekt méretéhez illik
+	. GWT
+	. Fejlesztőkörnyezet
+		. Eclipse
+		. Ant
+		. Hibernate Tools
+. Funkcionalitás
+	. Használati eset diagram
+	. Használati esetek (diagram kifejtése)
+. Követelmények kódokkal
+	(egy táblázat ami a rendszer minden funkcióját
+	felsorolja és hozzárendel egy azonosítót)
+. Fogalomtár
