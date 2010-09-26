@@ -1,0 +1,11 @@
+. Rendszerterv
+	. Architektúra (ábra)
+	. Komponens diagram
+	. Általános tervezési elvek
+	. Perzisztens réteg
+		(DB séma kép)
+. Implementáció
+	. Entitások (JPA osztályok)
+	. Főbb osztályok leírása
+		. projektek szerinti sorrendben, pl common, ejb, web, ...
+. Továbbfejlesztési lehetőségek
