@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+   <appender name="SP" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="File" value="${jboss.server.log.dir}/sp.log"/>
+        <param name="Append" value="true" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d|%-5p|%t|%C.%M()] %m%n%n"/>
+        </layout>
+   </appender>
+
+   <!-- JBoss és egyéb osztályok logja -->
+   <appender name="DEFAULT_FILE" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="File" value="${jboss.server.log.dir}/server.log"/>
+        <param name="Append" value="true" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d|%-5p|%t|%C.%M()] %m%n%n"/>
+        </layout>
+   </appender>
+   
+   <appender name="SYSOUT" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+        <param name="File" value="${jboss.server.log.dir}/sysout.log"/>
+        <param name="Append" value="true" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d|%t] %m%n"/>
+        </layout>
+   </appender>
+   
+   <appender name="HIBERNATE" class="org.jboss.logging.appender.DailyRollingFileAppender">
+        <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler" />
+        <param name="File" value="${jboss.server.log.dir}/hibernate/hibernate.log" />
+        <param name="Append" value="true" />
+        <param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d|%-5p|%t|%C.%M()] %m%n%n" />
+        </layout>
+    </appender>
+
+   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+      <errorHandler class="org.jboss.logging.util.OnlyOnceErrorHandler"/>
+      <param name="Target" value="System.out"/>
+      <param name="Threshold" value="INFO"/>
+      <layout class="org.apache.log4j.PatternLayout">
+         <param name="ConversionPattern" value="[%d{ISO8601}|%-5p|%c{1}.%M()] %m%n"/>
+      </layout>
+   </appender>
+   
+   <category name="hu" additivity="false">
+      <priority value="TRACE" />
+      <appender-ref ref="SP" />
+   </category>
+   
+   <category name="org.hibernate" additivity="false">
+      <priority value="INFO"/>
+	  <appender-ref ref="HIBERNATE" />
+   </category>
+   
+   <category name="org.hibernate.SQL" additivity="false">
+      <priority value="INFO"/>
+	  <appender-ref ref="HIBERNATE" />
+   </category>
+   
+   <category name="STDERR" additivity="false">
+      <priority value="INFO"/>
+	  <appender-ref ref="SYSOUT" />
+   </category>
+   
+   <category name="STDOUT" additivity="false">
+      <priority value="INFO"/>
+	  <appender-ref ref="SYSOUT" />
+   </category>
+
+   <root>
+      <priority value="INFO"/>
+      <appender-ref ref="DEFAULT_FILE"/>
+   </root>
+
+</log4j:configuration>

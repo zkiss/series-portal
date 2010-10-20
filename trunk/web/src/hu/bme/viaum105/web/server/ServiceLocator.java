@@ -4,7 +4,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import hu.bme.viaum105.service.SeriesPortalService;
+import hu.bme.viaum105.service.SeriesPortal;
 import hu.bme.viaum105.service.ServerException;
 
 public class ServiceLocator {
@@ -24,15 +24,15 @@ public class ServiceLocator {
 
     private Context context;
 
-    private SeriesPortalService seriesPortalService;
+    private SeriesPortal seriesPortalService;
 
     private ServiceLocator(Context context) {
 	this.context = context;
     }
 
-    public SeriesPortalService getSeriesPortalService() throws ServerException {
+    public SeriesPortal getSeriesPortalService() throws ServerException {
 	if (this.seriesPortalService == null) {
-	    this.seriesPortalService = this.lookup(SeriesPortalService.JNDI_LOCATION, SeriesPortalService.class);
+	    this.seriesPortalService = this.lookup(SeriesPortal.JNDI_LOCATION, SeriesPortal.class);
 	}
 	return this.seriesPortalService;
     }

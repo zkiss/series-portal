@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="common" default="dist">
+
+	<import file="../build/common.xml" />
+
+	<target name="clean">
+		<delete dir="${ant}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${bin}" />
+		<javac destdir="${bin}" classpathref="path-lib-common" srcdir="${src}" encoding="${encoding}" />
+	</target>
+
+	<target name="dist" depends="clean, compile">
+		<mkdir dir="${dist}" />
+		<copy overwrite="yes" todir="${bin}">
+			<fileset dir="src">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<jar destfile="${dist}/${ant.project.name}.jar" basedir="${bin}">
+		</jar>
+	</target>
+
+</project>
+
