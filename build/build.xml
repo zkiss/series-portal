@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-all" default="deploy">
+
+	<import file="common.xml" />
+
+	<target name="clean-all">
+		<delete dir="${dist-all}" />
+		<ant dir="${dir-common}" target="clean" />
+		<ant dir="${dir-ejb}" target="clean" />
+		<ant dir="${dir-web}" target="clean" />
+	</target>
+
+	<target name="compile-all">
+		<ant dir="${dir-common}" target="compile" />
+		<ant dir="${dir-ejb}" target="compile" />
+		<ant dir="${dir-web}" target="compile" />
+	</target>
+
+	<target name="dist-all">
+		<ant dir="${dir-common}" target="dist" />
+		<ant dir="${dir-ejb}" target="dist" />
+		<ant dir="${dir-web}" target="dist" />
+	</target>
+
+	<target name="deploy" depends="dist-all">
+		<copy todir="${jboss.server}\lib" overwrite="true">
+			<fileset dir="${dir-common}\${dist}" />
+		</copy>
+		<copy todir="${jboss.server}\deploy" overwrite="true">
+			<fileset dir="${dir-ejb}\${dist}" />
+		</copy>
+		<copy todir="${jboss.server}\deploy" overwrite="true">
+			<fileset dir="${dir-web}\${dist}" />
+		</copy>
+	</target>
+
+</project>
+

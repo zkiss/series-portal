@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="web" default="dist">
+
+	<import file="../build/common.xml" />
+	<property name="bin-gwt" value="${ant}\gwt" />
+	<property name="war" value="war" />
+
+	<path id="path-gwt">
+		<filelist dir="${dir-lib}\gwt-sdk-2.0.4">
+			<file name="gwt-dev.jar" />
+			<file name="gwt-user.jar" />
+		</filelist>
+	</path>
+
+	<target name="clean">
+		<delete dir="${ant}" />
+	</target>
+
+	<target name="javac">
+		<mkdir dir="${bin}" />
+		<javac destdir="${bin}" classpathref="path-lib-server" srcdir="${src}" encoding="${encoding}">
+			<classpath>
+				<path refid="path-gwt" />
+				<pathelement location="${dir-common}\${bin}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="gwtc" depends="javac" description="GWT compile to JavaScript">
+		<mkdir dir="${bin-gwt}" />
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler">
+			<classpath>
+				<pathelement location="${src}" />
+				<path location="${dir-common}\${bin}" />
+				<path refid="path-lib-common" />
+				<path refid="path-gwt" />
+			</classpath>
+			<jvmarg value="-Xmx256M" />
+			<arg value="-logLevel" />
+			<arg value="INFO" />
+			<arg value="-draftCompile" />
+			<arg value="-war" />
+			<arg value="${bin-gwt}" />
+			<arg value="hu.bme.viaum105.web.Web" />
+		</java>
+	</target>
+
+	<target name="dist" depends="clean, gwtc">
+		<mkdir dir="${dist}" />
+		<war destfile="${dist}\${ant.project.name}.war" webxml="${war}\WEB-INF\web.xml" update="false">
+			<fileset dir="${bin-gwt}" />
+			<fileset dir="${war}">
+				<exclude name="web\**\*" />
+				<exclude name="WEB-INF\**\*" />
+			</fileset>
+			<lib dir="${war}\WEB-INF\lib" />
+			<classes dir="${war}">
+				<include name="${bin}\**\*" />
+				<include name="src\**\*" />
+				<exclude name="src\**\*.java" />
+			</classes>
+			<webinf dir="${war}\WEB-INF" excludes="lib\*" />
+		</war>
+	</target>
+
+</project>
+

@@ -6,7 +6,6 @@
 	<persistence-unit name="SERIESPORTAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>jdbc/SeriesPortal</jta-data-source>
-		<class>hu.bme.viaum105.data.persistent.User</class>
 
 		<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />

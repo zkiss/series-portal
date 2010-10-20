@@ -46,11 +46,12 @@ public class Converter {
 	}
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T convert(Object source) throws ConverterException {
 	if (Converter.log.isTraceEnabled()) {
 	    Converter.log.trace("User called convert: " + source);
 	}
-	return new Converter(source).convert();
+	return (T) new Converter(source).convert();
     }
 
     private static Conversion getConversion(Class<?> clazz) {
@@ -116,6 +117,7 @@ public class Converter {
 	this.memory = memory;
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T convert() throws ConverterException {
 	if (Converter.log.isTraceEnabled()) {
 	    Converter.log.trace("Converting " + this.source + " to " + this.targetClass);
@@ -123,9 +125,9 @@ public class Converter {
 	try {
 	    T ret;
 	    if (this.source instanceof Enum<?>) {
-		ret = this.convertEnum((Enum<?>) this.source);
+		ret = (T) this.convertEnum((Enum<?>) this.source);
 	    } else {
-		ret = this.convertClass();
+		ret = (T) this.convertClass();
 	    }
 	    if (Converter.log.isTraceEnabled()) {
 		Converter.log.trace("converted: " + ret);
