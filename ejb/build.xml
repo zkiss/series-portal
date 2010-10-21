@@ -18,12 +18,16 @@
 
 	<target name="dist" depends="clean, compile">
 		<mkdir dir="${dist}" />
-		<copy overwrite="yes" todir="${bin}">
-			<fileset dir="src">
-				<exclude name="**/*.java" />
-			</fileset>
+		<jar destfile="${dist}/${ant.project.name}.jar">
+			<fileset dir="src" excludes="**/*.java" />
+			<fileset dir="${bin}" />
+		</jar>
+	</target>
+
+	<target name="deploy" depends="dist">
+		<copy todir="${jboss.server}\deploy" overwrite="true">
+			<fileset dir="${dist}" />
 		</copy>
-		<jar destfile="${dist}/${ant.project.name}.jar" basedir="${bin}" />
 	</target>
 
 </project>

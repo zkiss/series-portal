@@ -22,16 +22,28 @@
 		<ant dir="${dir-web}" target="dist" />
 	</target>
 
-	<target name="deploy" depends="dist-all">
-		<copy todir="${jboss.server}\lib" overwrite="true">
-			<fileset dir="${dir-common}\${dist}" />
-		</copy>
-		<copy todir="${jboss.server}\deploy" overwrite="true">
-			<fileset dir="${dir-ejb}\${dist}" />
-		</copy>
-		<copy todir="${jboss.server}\deploy" overwrite="true">
-			<fileset dir="${dir-web}\${dist}" />
-		</copy>
+	<target name="deploy">
+		<ant dir="${dir-common}" target="deploy" />
+		<ant dir="${dir-ejb}" target="deploy" />
+		<ant dir="${dir-web}" target="deploy" />
+	</target>
+
+	<target name="clean-jboss">
+		<delete dir="${jboss.server}\work" />
+		<delete dir="${jboss.server}\tmp" />
+		<delete dir="${jboss.server}\data" />
+		<delete dir="${jboss.server}\log" />
+	</target>
+
+	<target name="run-jboss">
+		<exec executable="cmd">
+			<arg value="/c" />
+			<arg value="start" />
+			<arg value="${jboss.basedir}\bin\debug.bat" />
+			<arg value="-c" />
+			<arg value="${jboss.servername}" />
+			<arg value="-b${jboss.bind.address}" />
+		</exec>
 	</target>
 
 </project>

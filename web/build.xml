@@ -4,6 +4,7 @@
 	<import file="../build/common.xml" />
 	<property name="bin-gwt" value="${ant}\gwt" />
 	<property name="war" value="war" />
+	<property name="gwt.module.name" value="web" />
 
 	<path id="path-gwt">
 		<filelist dir="${dir-lib}\gwt-sdk-2.0.4">
@@ -50,7 +51,7 @@
 		<war destfile="${dist}\${ant.project.name}.war" webxml="${war}\WEB-INF\web.xml" update="false">
 			<fileset dir="${bin-gwt}" />
 			<fileset dir="${war}">
-				<exclude name="web\**\*" />
+				<exclude name="${gwt.module.name}\**\*" />
 				<exclude name="WEB-INF\**\*" />
 			</fileset>
 			<lib dir="${war}\WEB-INF\lib" />
@@ -61,6 +62,12 @@
 			</classes>
 			<webinf dir="${war}\WEB-INF" excludes="lib\*" />
 		</war>
+	</target>
+
+	<target name="deploy" depends="dist">
+		<copy todir="${jboss.server}\deploy" overwrite="true">
+			<fileset dir="${dist}" />
+		</copy>
 	</target>
 
 </project>
