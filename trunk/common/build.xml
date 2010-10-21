@@ -14,13 +14,16 @@
 
 	<target name="dist" depends="clean, compile">
 		<mkdir dir="${dist}" />
-		<copy overwrite="yes" todir="${bin}">
-			<fileset dir="src">
-				<exclude name="**/*.java" />
-			</fileset>
-		</copy>
-		<jar destfile="${dist}/${ant.project.name}.jar" basedir="${bin}">
+		<jar destfile="${dist}\${ant.project.name}.jar">
+			<fileset dir="${bin}" />
+			<fileset dir="src" excludes="**/*.java" />
 		</jar>
+	</target>
+
+	<target name="deploy" depends="dist">
+		<copy todir="${jboss.server}\lib" overwrite="true">
+			<fileset dir="${dist}" />
+		</copy>
 	</target>
 
 </project>
