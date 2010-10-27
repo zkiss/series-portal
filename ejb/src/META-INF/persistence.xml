@@ -6,9 +6,10 @@
 	<persistence-unit name="SERIESPORTAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>jdbc/SeriesPortal</jta-data-source>
+		<class>hu.bme.viaum105.data.persistent.User</class>
 
 		<properties>
-			<property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
 			<property name="hibernate.max_fetch_depth" value="3" />
 			<property name="hibernate.show_sql" value="false" />
 		</properties>

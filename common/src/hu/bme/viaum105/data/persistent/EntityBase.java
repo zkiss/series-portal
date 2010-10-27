@@ -20,7 +20,7 @@ public abstract class EntityBase implements Serializable {
     private static final long serialVersionUID = 2355552186266075607L;
 
     @Id
-    @Column
+    @Column(name = "ID")
     @GeneratedValue
     long id;
 
@@ -55,6 +55,11 @@ public abstract class EntityBase implements Serializable {
     @Override
     public final int hashCode() {
 	return Long.valueOf(this.id).hashCode();
+    }
+
+    @Override
+    public String toString() {
+	return this.getClass().getSimpleName() + " [#" + this.id + "]";
     }
 
 }
