@@ -4,6 +4,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import hu.bme.viaum105.service.ErrorType;
 import hu.bme.viaum105.service.SeriesPortal;
 import hu.bme.viaum105.service.ServerException;
 
@@ -18,7 +19,7 @@ public class ServiceLocator {
 	    }
 	    return ServiceLocator.instance;
 	} catch (NamingException e) {
-	    throw new ServerException(e);
+	    throw new ServerException(ErrorType.NAMING_EXCEPTION, e);
 	}
     }
 
@@ -42,7 +43,7 @@ public class ServiceLocator {
 	try {
 	    return (T) this.context.lookup(name.startsWith("jms") ? name : "series-portal/" + name + "/remote");
 	} catch (NamingException e) {
-	    throw new ServerException(e);
+	    throw new ServerException(ErrorType.NAMING_EXCEPTION, e);
 	}
     }
 
