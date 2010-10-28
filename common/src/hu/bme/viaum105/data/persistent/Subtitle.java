@@ -20,7 +20,7 @@ public class Subtitle extends EntityBase {
     @JoinColumn(name = "EPISODE_ID", nullable = false)
     private Episode episode;
 
-    @Column(name = "FILE", nullable = false, length = 255)
+    @Column(name = "FILE", nullable = false, length = 255, unique = true)
     private String fileName;
 
     @Column(name = "ADDED_AT")
@@ -49,6 +49,11 @@ public class Subtitle extends EntityBase {
 
     public void setFileName(String fileName) {
 	this.fileName = fileName;
+    }
+
+    @Override
+    public String toString() {
+	return super.toString() + "[" + this.fileName + "]";
     }
 
 }

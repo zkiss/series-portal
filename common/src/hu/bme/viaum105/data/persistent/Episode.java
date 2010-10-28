@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,6 +41,9 @@ public class Episode extends RegisteredEntity {
     @JoinTable(name = "EPISODE_ACTOR")
     private Set<Actor> actors = new HashSet<Actor>();
 
+    @OneToMany(mappedBy = "episode")
+    private Set<Subtitle> subtitles = new HashSet<Subtitle>();
+
     public Set<Actor> getActors() {
 	return this.actors;
     }
@@ -60,6 +64,10 @@ public class Episode extends RegisteredEntity {
 	return this.series;
     }
 
+    public Set<Subtitle> getSubtitles() {
+	return this.subtitles;
+    }
+
     public void setAirDate(Date airDate) {
 	this.airDate = airDate;
     }
@@ -74,6 +82,15 @@ public class Episode extends RegisteredEntity {
 
     public void setSeries(Series series) {
 	this.series = series;
+    }
+
+    @Override
+    public String toString() {
+	return super.toString() + "[" + //
+		this.series.getTitle() + //
+		" s" + this.seasonNumber + //
+		"e" + this.episodeNumber + //
+		" - " + this.getTitle() + "]";
     }
 
 }

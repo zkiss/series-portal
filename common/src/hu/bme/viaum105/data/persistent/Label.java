@@ -32,4 +32,9 @@ public class Label extends EntityBase {
 	this.label = label;
     }
 
+    @Override
+    public String toString() {
+	return super.toString() + "[" + this.label + "]";
+    }
+
 }
