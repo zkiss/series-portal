@@ -33,7 +33,7 @@ public class ServiceLocator {
 
     public SeriesPortal getSeriesPortalService() throws ServerException {
 	if (this.seriesPortalService == null) {
-	    this.seriesPortalService = this.lookup(SeriesPortal.JNDI_LOCATION, SeriesPortal.class);
+	    this.seriesPortalService = this.lookup(SeriesPortal.JNDI_NAME, SeriesPortal.class);
 	}
 	return this.seriesPortalService;
     }

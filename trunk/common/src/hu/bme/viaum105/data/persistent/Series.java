@@ -33,4 +33,9 @@ public class Series extends RegisteredEntity {
 	this.imdbUrl = imdbUrl;
     }
 
+    @Override
+    public String toString() {
+	return super.toString() + "[" + this.getTitle() + "]";
+    }
+
 }

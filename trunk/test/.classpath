@@ -28,5 +28,8 @@
 	<classpathentry kind="lib" path="/lib/mysql-connector-java-5.0.8-bin.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/common"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ejb"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/series-portal-webui"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/web"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -47,4 +47,9 @@ public class Rate extends EntityBase {
 	this.user = user;
     }
 
+    @Override
+    public String toString() {
+	return super.toString() + "[" + this.rate + "]";
+    }
+
 }

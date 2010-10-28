@@ -95,7 +95,7 @@ public class User extends EntityBase {
 
     @Override
     public String toString() {
-	return super.toString() + "[name:" + this.loginName + "]";
+	return super.toString() + "[" + this.loginName + "]";
     }
 
 }
