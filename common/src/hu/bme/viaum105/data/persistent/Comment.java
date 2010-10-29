@@ -1,11 +1,15 @@
 package hu.bme.viaum105.data.persistent;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "ACTION_COMMENT")
@@ -28,8 +32,16 @@ public class Comment extends EntityBase {
     @Column(name = "IS_APPROVED")
     private boolean isApproved;
 
+    @Column(name = "DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+
     public String getComment() {
 	return this.comment;
+    }
+
+    public Date getDate() {
+	return this.date;
     }
 
     public RegisteredEntity getRegisteredEntity() {
@@ -50,6 +62,10 @@ public class Comment extends EntityBase {
 
     public void setComment(String comment) {
 	this.comment = comment;
+    }
+
+    public void setDate(Date date) {
+	this.date = date;
     }
 
     public void setRegisteredEntity(RegisteredEntity registeredEntity) {

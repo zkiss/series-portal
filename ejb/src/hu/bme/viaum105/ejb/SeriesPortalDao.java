@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import hu.bme.viaum105.data.persistent.Episode;
+import hu.bme.viaum105.data.persistent.EntityBase;
+import hu.bme.viaum105.data.persistent.Like;
+import hu.bme.viaum105.data.persistent.Rate;
+import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.User;
 import hu.bme.viaum105.service.DaoException;
@@ -20,11 +23,49 @@ public class SeriesPortalDao {
 	this.entityManager = entityManager;
     }
 
+    public Rate findRate(RegisteredEntity registeredEntity, User user) throws DaoException {
+	List<Rate> rates = DaoHelper.getResultList(this.entityManager.createQuery("select r from " + Rate.class.getSimpleName() + " r" + //
+		" where r.user = :user" + //
+		" and r.registeredEntity = :entity"). //
+		setParameter("user", user). //
+		setParameter("entity", registeredEntity), Rate.class);
+	Rate ret;
+	if (rates.size() == 0) {
+	    ret = null;
+	} else {
+	    ret = rates.get(0);
+	}
+	return ret;
+    }
+
     public List<Series> getAllSeriesPaged(int pageSize, int pageNumber) throws DaoException {
 	return DaoHelper.getResultList(this.entityManager.createQuery( //
 		"select s from " + Series.class.getSimpleName() + " s order by s.name asc"). //
 		setMaxResults(pageSize). //
 		setFirstResult(pageSize * pageNumber), Series.class);
+    }
+
+    public long getLikeCount(long registeredEntityId) throws DaoException {
+	try {
+	    Number ret = (Number) this.entityManager.createQuery( //
+		    "select count(l) from " + Like.class.getSimpleName() + " l where l.registeredEntity.id = :id"). //
+		    setParameter("id", registeredEntityId).getSingleResult();
+	    return ret.longValue();
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not query like count for registered entity #" + registeredEntityId, e);
+	}
+    }
+
+    public double getRate(long registeredEntityId) throws DaoException {
+	try {
+	    Number rate = (Number) this.entityManager.createQuery("select avg(r.rate) from " + Rate.class.getSimpleName() + " r " + //
+		    "where r.registeredEntity.id = :id"). //
+		    setParameter("id", registeredEntityId). //
+		    getSingleResult();
+	    return rate.doubleValue();
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not determine rate for registered entity #" + registeredEntityId, e);
+	}
     }
 
     public User register(User user) throws DaoException, ServerException {
@@ -42,19 +83,11 @@ public class SeriesPortalDao {
 	}
     }
 
-    public Episode save(Episode episode) throws DaoException {
+    public <T extends EntityBase> T save(T entity) throws DaoException {
 	try {
-	    return this.entityManager.merge(episode);
+	    return this.entityManager.merge(entity);
 	} catch (RuntimeException e) {
-	    throw new DaoException("Could not save " + episode, e);
-	}
-    }
-
-    public Series save(Series series) throws DaoException {
-	try {
-	    return this.entityManager.merge(series);
-	} catch (RuntimeException e) {
-	    throw new DaoException("Could not save " + series, e);
+	    throw new DaoException("Could not save " + entity, e);
 	}
     }
 

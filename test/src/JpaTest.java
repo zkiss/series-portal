@@ -8,10 +8,11 @@ import hu.bme.viaum105.data.persistent.Actor;
 import hu.bme.viaum105.data.persistent.Episode;
 import hu.bme.viaum105.data.persistent.Label;
 import hu.bme.viaum105.data.persistent.Series;
+import hu.bme.viaum105.ejb.SeriesPortalDao;
 
 public class JpaTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 	EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("SERIESPORTAL");
 	new JpaTest(entityManagerFactory).run();
     }
@@ -22,17 +23,19 @@ public class JpaTest {
 	this.entityManagerFactory = entityManagerFactory;
     }
 
-    private void run() {
+    private void run() throws Exception {
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	entityManager.toString();
 	entityManager.getTransaction().begin();
+
+	SeriesPortalDao dao = new SeriesPortalDao(entityManager);
 
 	Series s = new Series();
 	s.setDescription("Teszt sorozat leírása");
 	s.setImdbUrl("http://www.imdb.com");
 	s.setTitle("Teszt sorozat");
 
-	s = entityManager.merge(s);
+	s = dao.save(s);
 
 	Episode e = new Episode();
 	e.setSeries(s);
@@ -56,7 +59,7 @@ public class JpaTest {
 	l.setLabel("vicces");
 	e.getLabels().add(l);
 
-	entityManager.merge(e);
+	dao.save(e);
 
 	entityManager.getTransaction().commit();
 	System.out.println("done");

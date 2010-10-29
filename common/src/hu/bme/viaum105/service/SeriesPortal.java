@@ -2,7 +2,10 @@ package hu.bme.viaum105.service;
 
 import java.util.List;
 
+import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.Episode;
+import hu.bme.viaum105.data.persistent.Like;
+import hu.bme.viaum105.data.persistent.Rate;
 import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.Subtitle;
@@ -17,6 +20,45 @@ public interface SeriesPortal {
     public final static String JNDI_NAME = "ejb/SeriesPortal";
 
     /**
+     * Megjegyzés hozzáadása
+     * 
+     * @param registeredEntity
+     * @param user
+     * @param comment
+     * @return a hozzáadott megjegyzés
+     * @throws DaoException
+     */
+    public Comment comment(RegisteredEntity registeredEntity, User user, String comment) throws DaoException;
+
+    /**
+     * Megmondja, hányan lájkolták már az adott ID-jű entitást
+     * 
+     * @param registeredEntityId
+     * @return
+     * @throws DaoException
+     */
+    public long getLikeCount(long registeredEntityId) throws DaoException;
+
+    /**
+     * Megmondja az összesített értékelését adott ID-jű entitásnak
+     * 
+     * @param registeredEntityId
+     * @return
+     * @throws DaoException
+     */
+    public double getRate(long registeredEntityId) throws DaoException;
+
+    /**
+     * Lájkolás
+     * 
+     * @param registeredEntity
+     * @param user
+     * @return
+     * @throws DaoException
+     */
+    public Like like(RegisteredEntity registeredEntity, User user) throws DaoException;
+
+    /**
      * Visszaadja az összes sorozatot név szerint rendezve. A lekérdezés
      * oldalakra van tördelve, minden oldalt külön kell lekérdezni.
      * 
@@ -28,7 +70,7 @@ public interface SeriesPortal {
      * @throws DaoException
      * @throws ServerException
      */
-    public List<Series> getAllSeriesPaged(int pageSize, int pageNumber) throws DaoException;
+    public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;;
 
     /**
      * Értékelés
@@ -38,7 +80,7 @@ public interface SeriesPortal {
      * @param rate
      * @throws DaoException
      */
-    public void rate(RegisteredEntity registeredEntity, User user, int rate) throws DaoException;
+    public Rate rate(RegisteredEntity registeredEntity, User user, int rate) throws DaoException;
 
     /**
      * Új felhasználó regisztrálása
