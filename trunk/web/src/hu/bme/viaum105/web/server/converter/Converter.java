@@ -14,8 +14,30 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import hu.bme.viaum105.data.nonpersistent.Role;
+import hu.bme.viaum105.data.persistent.Actor;
+import hu.bme.viaum105.data.persistent.Comment;
+import hu.bme.viaum105.data.persistent.Episode;
+import hu.bme.viaum105.data.persistent.Label;
+import hu.bme.viaum105.data.persistent.Like;
+import hu.bme.viaum105.data.persistent.Rate;
+import hu.bme.viaum105.data.persistent.RegisteredEntity;
+import hu.bme.viaum105.data.persistent.Series;
+import hu.bme.viaum105.data.persistent.Subtitle;
+import hu.bme.viaum105.data.persistent.User;
 import hu.bme.viaum105.web.server.converter.conversion.Conversion;
 import hu.bme.viaum105.web.server.converter.conversion.Skip;
+import hu.bme.viaum105.web.shared.dto.nonpersistent.RoleDto;
+import hu.bme.viaum105.web.shared.dto.persistent.ActorDto;
+import hu.bme.viaum105.web.shared.dto.persistent.CommentDto;
+import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
+import hu.bme.viaum105.web.shared.dto.persistent.LabelDto;
+import hu.bme.viaum105.web.shared.dto.persistent.LikeDto;
+import hu.bme.viaum105.web.shared.dto.persistent.RateDto;
+import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
+import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+import hu.bme.viaum105.web.shared.dto.persistent.SubtitleDto;
+import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,11 +53,17 @@ public class Converter {
 
     static {
 	classPairs = new ArrayList<Conversion>();
-	// TODO entitás osztályok megadása
-	// Converter.classPairs.add(new Conversion(Direction.class,
-	// DirectionDto.class));
-	// Converter.classPairs.add(new Conversion(Portal.class,
-	// PortalDto.class, new Skip("name"), new Skip("online")));
+	Converter.classPairs.add(new Conversion(Role.class, RoleDto.class));
+	Converter.classPairs.add(new Conversion(Actor.class, ActorDto.class));
+	Converter.classPairs.add(new Conversion(Comment.class, CommentDto.class));
+	Converter.classPairs.add(new Conversion(Episode.class, EpisodeDto.class));
+	Converter.classPairs.add(new Conversion(Label.class, LabelDto.class));
+	Converter.classPairs.add(new Conversion(Like.class, LikeDto.class));
+	Converter.classPairs.add(new Conversion(Rate.class, RateDto.class));
+	Converter.classPairs.add(new Conversion(RegisteredEntity.class, RegisteredEntityDto.class));
+	Converter.classPairs.add(new Conversion(Series.class, SeriesDto.class));
+	Converter.classPairs.add(new Conversion(Subtitle.class, SubtitleDto.class));
+	Converter.classPairs.add(new Conversion(User.class, UserDto.class));
 
 	if (Converter.log.isTraceEnabled()) {
 	    StringBuilder sb = new StringBuilder("Converter config:");
@@ -43,6 +71,41 @@ public class Converter {
 		sb.append("\n").append(cp);
 	    }
 	    Converter.log.trace(sb);
+	}
+	Converter.checkConfig();
+    }
+
+    private static void checkClassConversion(Conversion conversion, Class<?> source, Class<?> target) {
+	for (Method getterMethod : source.getMethods()) {
+	    if (Converter.isGetter(getterMethod)) {
+		if (!(conversion.getRule(Converter.getterToField(getterMethod.getName())) instanceof Skip)) {
+		    try {
+			Converter.getPropertyTarget(target, getterMethod);
+		    } catch (Exception e) {
+			Converter.log.warn("Could not determine accessor on " + target.getSimpleName() + " for property "
+				+ Converter.getterToField(getterMethod.getName()));
+		    }
+		}
+	    }
+	}
+    }
+
+    private static void checkConfig() {
+	for (Conversion conversion : Converter.classPairs) {
+	    Converter.checkConversion(conversion, conversion.class1, conversion.class2);
+	    Converter.checkConversion(conversion, conversion.class2, conversion.class1);
+	}
+    }
+
+    private static void checkConversion(Conversion conversion, Class<?> source, Class<?> target) {
+	if (source.isEnum() && target.isEnum()) {
+	    if (source.getEnumConstants().length != target.getEnumConstants().length) {
+		Converter.log.warn("Enum constants are not synchronized: " + conversion);
+	    }
+	} else if (!source.isEnum() && !target.isEnum()) {
+	    Converter.checkClassConversion(conversion, source, target);
+	} else {
+	    Converter.log.warn("Invalid conversion: one of them is an Enum, while the other is not: " + conversion);
 	}
     }
 
@@ -79,6 +142,30 @@ public class Converter {
 	return ret;
     }
 
+    private static AccessibleObject getPropertyTarget(Class<?> targetClass, Method getterMethod) throws SecurityException, NoSuchFieldException {
+	AccessibleObject ret = null;
+	try {
+	    Method setter = Converter.getSetterOnTarget(targetClass, getterMethod);
+	    ret = setter;
+	} catch (NoSuchMethodException e) {
+	    // ha nincs setter, legyen egy field (ID miatt)
+	    String fieldName = Converter.getterToField(getterMethod.getName());
+	    Field field = Converter.getField(targetClass, fieldName);
+	    ret = field;
+	}
+	return ret;
+    }
+
+    private static Method getSetterOnTarget(Class<?> clazz, Method getter) throws SecurityException, NoSuchMethodException {
+	String fieldName = Converter.getterToField(getter.getName());
+	String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+	Class<?> returnType = Converter.getTarget(getter.getReturnType());
+	if (returnType == null) {
+	    returnType = getter.getReturnType();
+	}
+	return clazz.getMethod(setterName, returnType);
+    }
+
     private static Class<?> getTarget(Class<?> clazz) {
 	Class<?> target = null;
 	for (Iterator<Conversion> iterator = Converter.classPairs.iterator(); (target == null) && iterator.hasNext();) {
@@ -95,6 +182,27 @@ public class Converter {
 	} else {
 	    ret = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
 	}
+	return ret;
+    }
+
+    private static boolean isGetter(Method method) {
+	String methodName = method.getName();
+
+	boolean ret = true;
+	Method[] objectMethods = Object.class.getMethods();
+	for (int i = 0; ret && (i < objectMethods.length); i++) {
+	    ret = !methodName.equals(objectMethods[i].getName());
+	}
+
+	if (ret) {
+	    ret = (methodName.startsWith("get") && //
+		    Character.isUpperCase(methodName.charAt(3)) && //
+		    (method.getParameterTypes().length == 0))
+		    || (methodName.startsWith("is") && //
+			    Character.isUpperCase(methodName.charAt(2)) && //
+		    (method.getParameterTypes().length == 0));
+	}
+
 	return ret;
     }
 
@@ -153,10 +261,10 @@ public class Converter {
 	T ret = (T) this.targetClass.newInstance();
 	this.memory.put(this.source, ret);
 	for (Method sourceMethod : this.source.getClass().getMethods()) {
-	    if (this.isGetter(sourceMethod)) {
+	    if (Converter.isGetter(sourceMethod)) {
 		Converter.log.trace("getter found: " + sourceMethod.getName());
 		if (!(this.conversion.getRule(Converter.getterToField(sourceMethod.getName())) instanceof Skip)) {
-		    AccessibleObject target = this.getPropertyTarget(sourceMethod);
+		    AccessibleObject target = Converter.getPropertyTarget(this.targetClass, sourceMethod);
 		    Object getterValue = sourceMethod.invoke(this.source);
 		    if ((getterValue != null)) {
 			Class<?> targetClass;
@@ -166,7 +274,9 @@ public class Converter {
 			    targetClass = ((Method) target).getParameterTypes()[0];
 			}
 			Object converted = this.convertProperty(getterValue, targetClass);
-			this.setProperty(ret, target, converted);
+			if (converted != null) {
+			    this.setProperty(ret, target, converted);
+			}
 		    } else {
 			Converter.log.trace("Value is null, skipping");
 		    }
@@ -229,17 +339,30 @@ public class Converter {
     }
 
     private Object convertProperty(Object getterValue, Class<?> targetClass) throws InstantiationException, IllegalAccessException, ConverterException {
-	Object converted = this.memory.getConvertedValue(getterValue);
-	if (converted == null) {
-	    if (getterValue instanceof Collection<?>) {
-		converted = this.convertCollection((Collection<?>) getterValue, targetClass);
-		this.memory.put(getterValue, converted);
-	    } else if (Converter.getTarget(getterValue.getClass()) != null) {
-		converted = new Converter(getterValue, this.memory).convert();
-		this.memory.put(getterValue, converted);
-	    } else {
-		converted = getterValue;
+	boolean lazyCollection;
+	try {
+	    getterValue.hashCode();
+	    lazyCollection = getterValue.getClass().getName().startsWith("org.hibernate");
+	} catch (Exception e) {
+	    Converter.log.trace("Lazy collection, skipping");
+	    lazyCollection = true;
+	}
+	Object converted;
+	if (!lazyCollection) {
+	    converted = this.memory.getConvertedValue(getterValue);
+	    if (converted == null) {
+		if (getterValue instanceof Collection<?>) {
+		    converted = this.convertCollection((Collection<?>) getterValue, targetClass);
+		    this.memory.put(getterValue, converted);
+		} else if (Converter.getTarget(getterValue.getClass()) != null) {
+		    converted = new Converter(getterValue, this.memory).convert();
+		    this.memory.put(getterValue, converted);
+		} else {
+		    converted = getterValue;
+		}
 	    }
+	} else {
+	    converted = null;
 	}
 	return converted;
     }
@@ -259,51 +382,6 @@ public class Converter {
 	} else {
 	    ret = (Collection<Object>) collectionClass.newInstance();
 	}
-	return ret;
-    }
-
-    private AccessibleObject getPropertyTarget(Method getterMethod) throws SecurityException, NoSuchFieldException {
-	AccessibleObject ret = null;
-	try {
-	    Method setter = this.getSetterOnTarget(getterMethod);
-	    ret = setter;
-	} catch (NoSuchMethodException e) {
-	    // ha nincs setter, legyen egy field (ID miatt)
-	    String fieldName = Converter.getterToField(getterMethod.getName());
-	    Field field = Converter.getField(this.targetClass, fieldName);
-	    ret = field;
-	}
-	return ret;
-    }
-
-    private Method getSetterOnTarget(Method getter) throws SecurityException, NoSuchMethodException {
-	String fieldName = Converter.getterToField(getter.getName());
-	String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-	Class<?> returnType = Converter.getTarget(getter.getReturnType());
-	if (returnType == null) {
-	    returnType = getter.getReturnType();
-	}
-	return this.targetClass.getMethod(setterName, returnType);
-    }
-
-    private boolean isGetter(Method method) {
-	String methodName = method.getName();
-
-	boolean ret = true;
-	Method[] objectMethods = Object.class.getMethods();
-	for (int i = 0; ret && (i < objectMethods.length); i++) {
-	    ret = !methodName.equals(objectMethods[i].getName());
-	}
-
-	if (ret) {
-	    ret = (methodName.startsWith("get") && //
-		    Character.isUpperCase(methodName.charAt(3)) && //
-		    (method.getParameterTypes().length == 0))
-		    || (methodName.startsWith("is") && //
-			    Character.isUpperCase(methodName.charAt(2)) && //
-		    (method.getParameterTypes().length == 0));
-	}
-
 	return ret;
     }
 

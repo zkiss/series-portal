@@ -6,6 +6,15 @@
 	<persistence-unit name="SERIESPORTAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>jdbc/SeriesPortal</jta-data-source>
+		<class>hu.bme.viaum105.data.persistent.Actor</class>
+		<class>hu.bme.viaum105.data.persistent.Comment</class>
+		<class>hu.bme.viaum105.data.persistent.Episode</class>
+		<class>hu.bme.viaum105.data.persistent.Label</class>
+		<class>hu.bme.viaum105.data.persistent.Like</class>
+		<class>hu.bme.viaum105.data.persistent.Rate</class>
+		<class>hu.bme.viaum105.data.persistent.RegisteredEntity</class>
+		<class>hu.bme.viaum105.data.persistent.Series</class>
+		<class>hu.bme.viaum105.data.persistent.Subtitle</class>
 		<class>hu.bme.viaum105.data.persistent.User</class>
 
 		<properties>
