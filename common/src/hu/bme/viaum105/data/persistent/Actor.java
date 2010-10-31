@@ -1,5 +1,6 @@
 package hu.bme.viaum105.data.persistent;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,7 +19,7 @@ public class Actor extends EntityBase {
     private String name;
 
     @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
-    private Set<Episode> episodes;
+    private Set<Episode> episodes = new HashSet<Episode>();
 
     public Set<Episode> getEpisodes() {
 	return this.episodes;

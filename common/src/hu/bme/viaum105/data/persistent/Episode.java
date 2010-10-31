@@ -23,7 +23,7 @@ public class Episode extends RegisteredEntity {
 
     private static final long serialVersionUID = 3910682836742887123L;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SERIES_ID", nullable = false)
     private Series series;
 
@@ -43,6 +43,13 @@ public class Episode extends RegisteredEntity {
 
     @OneToMany(mappedBy = "episode")
     private Set<Subtitle> subtitles = new HashSet<Subtitle>();
+
+    public Actor addActor(String name) {
+	Actor a = new Actor();
+	a.setName(name);
+	this.actors.add(a);
+	return a;
+    }
 
     public Set<Actor> getActors() {
 	return this.actors;
@@ -86,9 +93,8 @@ public class Episode extends RegisteredEntity {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + //
-		this.series.getTitle() + //
-		" s" + this.seasonNumber + //
+	return super.toString() + //
+		"[s" + this.seasonNumber + //
 		"e" + this.episodeNumber + //
 		" - " + this.getTitle() + "]";
     }

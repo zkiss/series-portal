@@ -1,6 +1,8 @@
 package hu.bme.viaum105.ejb;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -12,8 +14,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
+import hu.bme.viaum105.data.persistent.Actor;
 import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.Episode;
+import hu.bme.viaum105.data.persistent.Label;
 import hu.bme.viaum105.data.persistent.Like;
 import hu.bme.viaum105.data.persistent.Rate;
 import hu.bme.viaum105.data.persistent.RegisteredEntity;
@@ -29,11 +33,26 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 @PersistenceUnit(name = "SERIESPORTAL", unitName = "SERIESPORTAL")
-@Stateless(name = SeriesPortal.JNDI_NAME, mappedName = SeriesPortal.JNDI_NAME)
+@Stateless(name = SeriesPortal.JNDI_NAME)
 @Remote(SeriesPortal.class)
 public class SeriesPortalImpl implements SeriesPortal {
 
     private static final Log log = LogFactory.getLog(SeriesPortalImpl.class);
+
+    private static void switchLabels(SeriesPortalDao dao, RegisteredEntity entity) throws DaoException {
+	HashSet<Label> labelsInDb = new HashSet<Label>();
+	for (Iterator<Label> iterator = entity.getLabels().iterator(); iterator.hasNext();) {
+	    Label label = iterator.next();
+	    if (label.getId() == 0) {
+		Label labelInDb = dao.getLabel(label.getLabel());
+		if (labelInDb != null) {
+		    iterator.remove();
+		    labelsInDb.add(labelInDb);
+		}
+	    }
+	}
+	entity.getLabels().addAll(labelsInDb);
+    }
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
@@ -69,7 +88,7 @@ public class SeriesPortalImpl implements SeriesPortal {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public double getRate(long registeredEntityId) throws DaoException {
+    public Double getRate(long registeredEntityId) throws DaoException {
 	SeriesPortalImpl.log.trace("getRate");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
@@ -91,10 +110,15 @@ public class SeriesPortalImpl implements SeriesPortal {
 	SeriesPortalImpl.log.trace("like");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
-	    Like like = new Like();
-	    like.setRegisteredEntity(registeredEntity);
-	    like.setUser(user);
-	    return new SeriesPortalDao(entityManager).save(like);
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    Like like = dao.findLike(registeredEntity, user);
+	    if (like == null) {
+		like = new Like();
+		like.setRegisteredEntity(registeredEntity);
+		like.setUser(user);
+		like = dao.save(like);
+	    }
+	    return like;
 	} finally {
 	    entityManager.close();
 	}
@@ -106,7 +130,18 @@ public class SeriesPortalImpl implements SeriesPortal {
 	SeriesPortalImpl.log.trace("getAllSeriesPaged");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
-	    return new SeriesPortalDao(entityManager).getAllSeriesPaged(pageSize, pageNumber);
+	    return new SeriesPortalDao(entityManager).listSeriesPaged(pageSize, pageNumber);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    public User login(String loginname, String passwordHash) throws DaoException, ServerException {
+	SeriesPortalImpl.log.trace("login");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    return new SeriesPortalDao(entityManager).getUser(loginname, passwordHash);
 	} finally {
 	    entityManager.close();
 	}
@@ -152,7 +187,25 @@ public class SeriesPortalImpl implements SeriesPortal {
 	SeriesPortalImpl.log.trace("save episode");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
-	    return new SeriesPortalDao(entityManager).save(episode);
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+
+	    // label-ek kikeresése
+	    SeriesPortalImpl.switchLabels(dao, episode);
+
+	    // színészek kikeresése
+	    HashSet<Actor> actorsInDb = new HashSet<Actor>();
+	    for (Iterator<Actor> iterator = episode.getActors().iterator(); iterator.hasNext();) {
+		Actor a = iterator.next();
+		if (a.getId() == 0) {
+		    Actor actorInDb = dao.getActor(a.getName());
+		    if (actorInDb != null) {
+			iterator.remove();
+			actorsInDb.add(actorInDb);
+		    }
+		}
+	    }
+	    episode.getActors().addAll(actorsInDb);
+	    return dao.save(episode);
 	} finally {
 	    entityManager.close();
 	}
@@ -164,7 +217,10 @@ public class SeriesPortalImpl implements SeriesPortal {
 	SeriesPortalImpl.log.trace("save series");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
-	    return new SeriesPortalDao(entityManager).save(series);
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    // label-ek kikeresése
+	    SeriesPortalImpl.switchLabels(dao, series);
+	    return dao.save(series);
 	} finally {
 	    entityManager.close();
 	}

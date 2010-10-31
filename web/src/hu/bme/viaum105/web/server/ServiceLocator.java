@@ -41,7 +41,7 @@ public class ServiceLocator {
     @SuppressWarnings("unchecked")
     public <T> T lookup(String name, Class<T> clazz) throws ServerException {
 	try {
-	    return (T) this.context.lookup(name.startsWith("jms") ? name : "series-portal/" + name + "/remote");
+	    return (T) this.context.lookup(name.startsWith("jms") ? name : name + "/remote");
 	} catch (NamingException e) {
 	    throw new ServerException(ErrorType.NAMING_EXCEPTION, e);
 	}

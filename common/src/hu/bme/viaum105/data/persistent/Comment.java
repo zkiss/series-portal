@@ -1,5 +1,6 @@
 package hu.bme.viaum105.data.persistent;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -78,7 +79,10 @@ public class Comment extends EntityBase {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + this.comment + "]";
+	return super.toString() + "[" + //
+		(this.date == null ? "---" : DateFormat.getDateTimeInstance().format(this.date)) + //
+		" " + this.user + //
+		": " + this.comment + "]";
     }
 
 }

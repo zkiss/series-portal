@@ -43,10 +43,11 @@ public interface SeriesPortal {
      * Megmondja az összesített értékelését adott ID-jű entitásnak
      * 
      * @param registeredEntityId
-     * @return
+     * @return az összesített értékelés, vagy <code>null</code>, ha még nem volt
+     *         értékelve
      * @throws DaoException
      */
-    public double getRate(long registeredEntityId) throws DaoException;
+    public Double getRate(long registeredEntityId) throws DaoException;
 
     /**
      * Lájkolás
@@ -65,12 +66,25 @@ public interface SeriesPortal {
      * @param pageSize
      *            maximum hány elem legyen a visszaadott listában
      * @param pageNumber
-     *            hányadik oldalt kérdezzük le
+     *            hányadik oldalt kérdezzük le. A számozás 0-tól indul
      * @return
      * @throws DaoException
      * @throws ServerException
      */
-    public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;;
+    public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;
+
+    /**
+     * Bejelentkezés. Ha sikeres, visszatér a felhasználóval, ha sikertelen,
+     * exception-t dob
+     * 
+     * @param loginname
+     * @param passwordHash
+     * @return
+     * @throws DaoException
+     * @throws ServerException
+     *             sikertelen bejelentkezés esetén
+     */
+    public User login(String loginname, String passwordHash) throws DaoException, ServerException;;
 
     /**
      * Értékelés

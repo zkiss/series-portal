@@ -4,15 +4,15 @@ import java.util.TreeMap;
 
 public class Conversion {
 
-    private final Class<?> c1;
+    public final Class<?> class1;
 
-    private final Class<?> c2;
+    public final Class<?> class2;
 
     private final TreeMap<String, ConversionRule> conversionRules;
 
     public Conversion(Class<?> c1, Class<?> c2, ConversionRule... conversionRules) {
-	this.c1 = c1;
-	this.c2 = c2;
+	this.class1 = c1;
+	this.class2 = c2;
 	this.conversionRules = new TreeMap<String, ConversionRule>();
 	for (ConversionRule conversionRule : conversionRules) {
 	    this.conversionRules.put(conversionRule.property, conversionRule);
@@ -21,10 +21,10 @@ public class Conversion {
 
     public Class<?> convert(Class<?> clazz) {
 	Class<?> ret = null;
-	if (this.c1.equals(clazz)) {
-	    ret = this.c2;
-	} else if (this.c2.equals(clazz)) {
-	    ret = this.c1;
+	if (this.class1.equals(clazz)) {
+	    ret = this.class2;
+	} else if (this.class2.equals(clazz)) {
+	    ret = this.class1;
 	}
 	return ret;
     }
@@ -38,8 +38,8 @@ public class Conversion {
 	    ret = true;
 	} else if (obj instanceof Conversion) {
 	    Conversion other = (Conversion) obj;
-	    ret = (this.c1.equals(other.c1) && this.c2.equals(other.c2)) || // 
-		    (this.c1.equals(other.c2) && this.c2.equals(other.c1));
+	    ret = (this.class1.equals(other.class1) && this.class2.equals(other.class2)) || //
+		    (this.class1.equals(other.class2) && this.class2.equals(other.class1));
 	} else {
 	    ret = false;
 	}
@@ -52,11 +52,11 @@ public class Conversion {
 
     @Override
     public int hashCode() {
-	return this.c1.hashCode() + this.c2.hashCode();
+	return this.class1.hashCode() + this.class2.hashCode();
     }
 
     @Override
     public String toString() {
-	return this.c1.getSimpleName() + " <-> " + this.c2.getSimpleName();
+	return this.class1.getSimpleName() + " <-> " + this.class2.getSimpleName();
     }
 }

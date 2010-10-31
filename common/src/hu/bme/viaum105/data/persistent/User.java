@@ -23,7 +23,7 @@ public class User extends EntityBase {
     @Column(name = "DISPLAY_NAME", nullable = false, length = 100)
     private String displayName;
 
-    @Column(name = "PASSWORD", nullable = false, length = 30)
+    @Column(name = "PASSWORD", nullable = false, length = 32)
     private String password;
 
     @Column(name = "EMAIL", length = 255)
