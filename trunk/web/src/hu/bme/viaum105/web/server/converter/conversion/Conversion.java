@@ -1,62 +1,189 @@
 package hu.bme.viaum105.web.server.converter.conversion;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
+import hu.bme.viaum105.web.server.converter.ConverterException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * JavaBean-ek közti konvertálást írja le
+ * 
+ * @author Zoltan Kiss
+ */
 public class Conversion {
 
-    public final Class<?> class1;
+    private static final Log log = LogFactory.getLog(Conversion.class);
 
-    public final Class<?> class2;
-
-    private final TreeMap<String, ConversionRule> conversionRules;
-
-    public Conversion(Class<?> c1, Class<?> c2, ConversionRule... conversionRules) {
-	this.class1 = c1;
-	this.class2 = c2;
-	this.conversionRules = new TreeMap<String, ConversionRule>();
-	for (ConversionRule conversionRule : conversionRules) {
-	    this.conversionRules.put(conversionRule.property, conversionRule);
-	}
-    }
-
-    public Class<?> convert(Class<?> clazz) {
-	Class<?> ret = null;
-	if (this.class1.equals(clazz)) {
-	    ret = this.class2;
-	} else if (this.class2.equals(clazz)) {
-	    ret = this.class1;
+    private static Field getField(Class<?> clazz, String fieldName) throws SecurityException, NoSuchFieldException {
+	Field ret = null;
+	try {
+	    ret = clazz.getDeclaredField(fieldName);
+	} catch (NoSuchFieldException e) {
+	    // ősosztályt nézzük
+	    if (clazz.getSuperclass() == null) {
+		throw e;
+	    }
+	    ret = Conversion.getField(clazz.getSuperclass(), fieldName);
 	}
 	return ret;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-	boolean ret;
-	if (obj == null) {
-	    ret = false;
-	} else if (obj == this) {
-	    ret = true;
-	} else if (obj instanceof Conversion) {
-	    Conversion other = (Conversion) obj;
-	    ret = (this.class1.equals(other.class1) && this.class2.equals(other.class2)) || //
-		    (this.class1.equals(other.class2) && this.class2.equals(other.class1));
+    private static String getPropertyKey(Class<?> clazz, String property) {
+	return clazz.getName() + "." + property;
+    }
+
+    private static Method getSetter(Class<?> clazz, String property, Method getter) throws SecurityException, NoSuchMethodException {
+	String setterName = "set" + Character.toUpperCase(property.charAt(0)) + property.substring(1);
+	return clazz.getDeclaredMethod(setterName, getter.getReturnType());
+    }
+
+    private static String getterToProperty(String methodName) {
+	String ret;
+	if (methodName.startsWith("is")) {
+	    ret = Character.toLowerCase(methodName.charAt(2)) + methodName.substring(3);
 	} else {
-	    ret = false;
+	    ret = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4);
 	}
 	return ret;
     }
 
-    public ConversionRule getRule(String property) {
-	return this.conversionRules.get(property);
+    private static boolean isGetter(Method method) {
+	String methodName = method.getName();
+
+	boolean ret = true;
+	Method[] objectMethods = Object.class.getMethods();
+	for (int i = 0; ret && (i < objectMethods.length); i++) {
+	    ret = !methodName.equals(objectMethods[i].getName());
+	}
+
+	if (ret) {
+	    ret = (methodName.startsWith("get") && //
+		    Character.isUpperCase(methodName.charAt(3)) && //
+		    (method.getParameterTypes().length == 0))
+		    || (methodName.startsWith("is") && //
+			    Character.isUpperCase(methodName.charAt(2)) && //
+		    (method.getParameterTypes().length == 0));
+	}
+
+	return ret;
     }
 
-    @Override
-    public int hashCode() {
-	return this.class1.hashCode() + this.class2.hashCode();
+    private ConversionDefinition conversionDefinition;
+
+    private final TreeSet<String> properties;
+
+    /**
+     * Kulcs: {@link #getPropertyKey(Class, String)}<br>
+     * Érték: {@link Accessor}
+     */
+    private final TreeMap<String, Accessor> propertyAccessors;
+
+    public Conversion(ConversionDefinition conversionDefinition) {
+	this.conversionDefinition = conversionDefinition;
+	if (conversionDefinition.isEnum()) {
+	    this.properties = null;
+	    this.propertyAccessors = null;
+	} else {
+	    this.properties = new TreeSet<String>();
+	    this.propertyAccessors = new TreeMap<String, Accessor>();
+	    this.discoverProperties();
+	}
     }
 
-    @Override
-    public String toString() {
-	return this.class1.getSimpleName() + " <-> " + this.class2.getSimpleName();
+    private void checkProperties(Class<?> clazz) {
+	for (String property : this.properties) {
+	    if (this.getAccessor(clazz, property) == null) {
+		Conversion.log.warn("No accessor was found for property: " + Conversion.getPropertyKey(clazz, property));
+	    }
+	}
     }
+
+    private void determineAccessor(Class<?> clazz, String property, Method getter) throws ConverterException {
+	Accessor accessor = null;
+	try {
+	    // előbb setterrel próbálkozunk
+	    Method setter = Conversion.getSetter(clazz, property, getter);
+	    accessor = new MethodAccessor(getter, setter);
+	    Conversion.log.trace("Using MethodAccessor for property: " + Conversion.getPropertyKey(clazz, property));
+	} catch (Exception e) {
+	    // field-del is próbálkozunk
+	}
+
+	if (accessor == null) {
+	    // field
+	    Field field;
+	    try {
+		field = Conversion.getField(clazz, property);
+		if (!getter.getReturnType().isAssignableFrom(field.getType())) {
+		    throw new ConverterException("Field for property " + Conversion.getPropertyKey(clazz, property)
+			    + " is incompatible with getter's return type: " + getter.getName());
+		}
+		accessor = new FieldAccessor(getter, field);
+		Conversion.log.trace("Using FieldAccessor for property: " + Conversion.getPropertyKey(clazz, property));
+	    } catch (Exception e) {
+		// nincs field
+		throw new ConverterException("No setter or field was found for property: " + Conversion.getPropertyKey(clazz, property), e);
+	    }
+	}
+
+	this.propertyAccessors.put(Conversion.getPropertyKey(clazz, property), accessor);
+    }
+
+    private void discoverProperties() {
+	this.discoverProperties(this.conversionDefinition.class1);
+	this.discoverProperties(this.conversionDefinition.class2);
+	this.checkProperties(this.conversionDefinition.class1);
+	this.checkProperties(this.conversionDefinition.class2);
+    }
+
+    private void discoverProperties(Class<?> clazz) {
+	// ami property, annak van getter
+	for (Method method : clazz.getMethods()) {
+	    if (Conversion.isGetter(method)) {
+		String property = Conversion.getterToProperty(method.getName());
+		if (!(this.conversionDefinition.getRule(property) instanceof Skip)) {
+		    this.properties.add(property);
+		    try {
+			this.determineAccessor(clazz, property, method);
+		    } catch (ConverterException e) {
+			if (Conversion.log.isTraceEnabled()) {
+			    Conversion.log.trace("Could not determine accessor for property: " + Conversion.getPropertyKey(clazz, property));
+			}
+		    }
+		} else {
+		    Conversion.log.trace("Property skipped: " + Conversion.getPropertyKey(clazz, property));
+		}
+	    }
+	}
+    }
+
+    /**
+     * A JavaBean-ek tulajdonságait lekérdező és módosító objektum lekérdezése
+     * 
+     * @param clazz
+     * @param property
+     * @return
+     */
+    public Accessor getAccessor(Class<?> clazz, String property) {
+	return this.propertyAccessors.get(Conversion.getPropertyKey(clazz, property));
+    }
+
+    public ConversionDefinition getConversionDefinition() {
+	return this.conversionDefinition;
+    }
+
+    /**
+     * A JavaBean-ek tulajdonságai
+     * 
+     * @return
+     */
+    public TreeSet<String> getProperties() {
+	return this.properties;
+    }
+
 }

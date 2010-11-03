@@ -69,9 +69,8 @@ public class EpisodeDto extends RegisteredEntityDto {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + //
-		this.series.getTitle() + //
-		" s" + this.seasonNumber + //
+	return super.toString() + //
+		"[s" + this.seasonNumber + //
 		"e" + this.episodeNumber + //
 		" - " + this.getTitle() + "]";
     }
