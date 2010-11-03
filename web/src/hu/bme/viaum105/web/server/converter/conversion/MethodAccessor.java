@@ -8,7 +8,7 @@ import hu.bme.viaum105.web.server.converter.ConverterException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-class MethodAccessor extends Accessor {
+public class MethodAccessor extends Accessor {
 
     private static final Log log = LogFactory.getLog(MethodAccessor.class);
 

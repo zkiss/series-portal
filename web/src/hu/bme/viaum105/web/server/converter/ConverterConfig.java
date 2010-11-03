@@ -15,7 +15,6 @@ import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.Subtitle;
 import hu.bme.viaum105.data.persistent.User;
-import hu.bme.viaum105.web.server.converter.conversion.Conversion;
 import hu.bme.viaum105.web.server.converter.conversion.ConversionDefinition;
 import hu.bme.viaum105.web.shared.dto.nonpersistent.RoleDto;
 import hu.bme.viaum105.web.shared.dto.persistent.ActorDto;

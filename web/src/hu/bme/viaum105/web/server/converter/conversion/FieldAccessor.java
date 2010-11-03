@@ -9,7 +9,7 @@ import hu.bme.viaum105.web.server.converter.ConverterException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-class FieldAccessor extends Accessor {
+public class FieldAccessor extends Accessor {
 
     private static final Log log = LogFactory.getLog(FieldAccessor.class);
 
