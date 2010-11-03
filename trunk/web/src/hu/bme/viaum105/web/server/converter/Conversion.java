@@ -1,11 +1,15 @@
-package hu.bme.viaum105.web.server.converter.conversion;
+package hu.bme.viaum105.web.server.converter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import hu.bme.viaum105.web.server.converter.ConverterException;
+import hu.bme.viaum105.web.server.converter.conversion.Accessor;
+import hu.bme.viaum105.web.server.converter.conversion.ConversionDefinition;
+import hu.bme.viaum105.web.server.converter.conversion.FieldAccessor;
+import hu.bme.viaum105.web.server.converter.conversion.MethodAccessor;
+import hu.bme.viaum105.web.server.converter.conversion.Skip;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Zoltan Kiss
  */
-public class Conversion {
+class Conversion {
 
     private static final Log log = LogFactory.getLog(Conversion.class);
 

@@ -9,7 +9,6 @@ import java.util.Queue;
 import java.util.Set;
 
 import hu.bme.viaum105.web.server.converter.conversion.Accessor;
-import hu.bme.viaum105.web.server.converter.conversion.Conversion;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
