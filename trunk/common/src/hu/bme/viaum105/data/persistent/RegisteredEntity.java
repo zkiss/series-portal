@@ -45,6 +45,13 @@ public abstract class RegisteredEntity extends EntityBase {
     @OneToMany(mappedBy = "registeredEntity", fetch = FetchType.LAZY)
     private Set<Rate> rates = new HashSet<Rate>();
 
+    public Label addLabel(String label) {
+	Label l = new Label();
+	l.setLabel(label);
+	this.labels.add(l);
+	return l;
+    }
+
     public Set<Comment> getComments() {
 	return this.comments;
     }
