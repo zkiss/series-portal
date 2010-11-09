@@ -5,9 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import hu.bme.viaum105.data.persistent.Actor;
 import hu.bme.viaum105.data.persistent.Episode;
-import hu.bme.viaum105.data.persistent.Label;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.ejb.SeriesPortalDao;
 import hu.bme.viaum105.web.server.converter.Converter;
@@ -18,7 +16,7 @@ public class JpaTest {
 
     public static void main(String[] args) throws Exception {
 	EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("SERIESPORTAL");
-	new JpaTest(entityManagerFactory).testCollection();
+	new JpaTest(entityManagerFactory).run();
     }
 
     private final EntityManagerFactory entityManagerFactory;
@@ -49,19 +47,11 @@ public class JpaTest {
 	e.setSeasonNumber(1);
 	e.setTitle("Epizód 1");
 
-	Actor a = new Actor();
-	a.setName("Első szereplő");
-
-	e.getActors().add(a);
-	a = new Actor();
-	a.setName("Második szereplő");
-	e.getActors().add(a);
+	e.addActor("Első szereplő");
+	e.addActor("Második szereplő");
+	e.addLabel("vicces");
 
 	s.getEpisodes().add(e);
-
-	Label l = new Label();
-	l.setLabel("vicces");
-	e.getLabels().add(l);
 
 	dao.save(e);
 
