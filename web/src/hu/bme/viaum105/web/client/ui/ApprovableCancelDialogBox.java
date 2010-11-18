@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author zoli
  */
-public class ApprovableDialogBox extends DialogBox {
+public class ApprovableCancelDialogBox extends DialogBox {
 	
 	Button approveButton = new Button();
 	Button cancelButton = new Button();
@@ -21,7 +21,7 @@ public class ApprovableDialogBox extends DialogBox {
 	HorizontalPanel buttonHolder = new HorizontalPanel();
 	VerticalPanel dialogPanel = new VerticalPanel();
 	
-	public ApprovableDialogBox() {
+	public ApprovableCancelDialogBox() {
 		initComponents();
 	}
 	

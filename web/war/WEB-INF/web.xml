@@ -4,7 +4,17 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-  
+
+   <!-- Servlets -->
+   <servlet>
+     <servlet-name>userServiceImpl</servlet-name>
+     <servlet-class>hu.bme.viaum105.web.server.service.UserServiceImpl</servlet-class>
+   </servlet>
+   <servlet-mapping>
+     <servlet-name>userServiceImpl</servlet-name>
+     <url-pattern>/web/UserService</url-pattern>
+   </servlet-mapping>	
+	
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Web.html</welcome-file>

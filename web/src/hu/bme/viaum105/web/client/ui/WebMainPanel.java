@@ -1,19 +1,28 @@
 package hu.bme.viaum105.web.client.ui;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import hu.bme.viaum105.web.client.image.WebImageBundle;
+
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.MenuBar;
+import com.google.gwt.user.client.ui.MenuItem;
 
 /**
  * Az alkamazást összefogó főpanel.
  * 
  * @author zoli
  */
-public class WebMainPanel extends HorizontalPanel {
+public class WebMainPanel extends FlowPanel {
 	
-	private Anchor loginAnchor = new Anchor();
-	private Anchor registerAnchor = new Anchor();
+	UserPanel userPanel = new UserPanel();
+	
+	MenuBar menu = new MenuBar();
+	MenuItem browseItem = createMenuItem("browse", WebImageBundle.INSTANCE.tv());
+	MenuItem createSerieItem = createMenuItem("new serie", WebImageBundle.INSTANCE.add());
+	MenuItem profileItem = createMenuItem("profile", WebImageBundle.INSTANCE.profile());
+	
+	ContentPanel contentPanel = new ContentPanel();
 	
 	//sorozatszám
 	private static final long serialVersionUID = -7857414717753358256L;
@@ -26,77 +35,24 @@ public class WebMainPanel extends HorizontalPanel {
 	 * Komponensek inicializálása.
 	 */
 	public void initComponents() {
-		loginAnchor.setText("Login");
-		registerAnchor.setText("Register");
+		menu.addItem(browseItem);
+		menu.addItem(createSerieItem);
+		menu.addItem(profileItem);
 		
-		add(loginAnchor);
-		add(registerAnchor);
+		menu.setStyleName("menuBar");
 		
-		
-		loginAnchor.addClickHandler(new ClickHandler() {
-			
-			public void onClick(ClickEvent event) {
-				showLogin();
-			}
-		});
-		
-		registerAnchor.addClickHandler(new ClickHandler() {
-			
-			public void onClick(ClickEvent event) {
-				showRegister();
-			}
-		});
+		add(userPanel);
+		add(menu);
+		add(contentPanel);
 	}
 	
-	private void showLogin() {
-		final LoginPanel loginPanel = new LoginPanel();
-		final ApprovableDialogBox dialogBox = new ApprovableDialogBox();
-		
-		dialogBox.getApproveButton().setText("Login");
-		dialogBox.getApproveButton().addClickHandler(new ClickHandler() {
-			
-			public void onClick(ClickEvent event) {
-				String loginName = loginPanel.getLoginName();
-				String password = loginPanel.getPassword();
-				
-				if(loginName.isEmpty() || password.isEmpty()) {
-					loginPanel.setErrorMessage("The login and password field are required");
-				}
-				
-				//TODO szolgáltatáshívás
+	public MenuItem createMenuItem(String menuLabel,
+			AbstractImagePrototype menuImage) {
+			    Command nullCommand = null;
+			    MenuItem menuItem = new MenuItem(menuImage.getHTML() + "&nbsp;"+
+			menuLabel, true, nullCommand);
+			    menuItem.addStyleName("menuItem");
+			    return menuItem;
 			}
-		});
-		
-		dialogBox.setText("Login");
-		dialogBox.setAnimationEnabled(true);
-		dialogBox.add(loginPanel);
-		
-		dialogBox.center();
-		dialogBox.show();
-	}
-	
-	/**
-	 * Feldobja a regisztrációs dialógus ablakot.
-	 */
-	private void showRegister() {
-		final RegisterPanel registerPanel = new RegisterPanel();
-		final ApprovableDialogBox dialogBox = new ApprovableDialogBox();
-		
-		dialogBox.getApproveButton().setText("Register");
-		dialogBox.getApproveButton().addClickHandler(new ClickHandler() {
-			
-			public void onClick(ClickEvent event) {
-				//TODO implementálni
-			}
-		});
-		
-		dialogBox.setText("Register");
-		dialogBox.setAnimationEnabled(true);
-		dialogBox.add(registerPanel);
-		
-		dialogBox.center();
-		dialogBox.show();
-		
-	}
 
 }

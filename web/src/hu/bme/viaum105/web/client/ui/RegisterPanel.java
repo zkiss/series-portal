@@ -22,11 +22,16 @@ public class RegisterPanel extends VerticalPanel{
 	private Label emailLabel = new Label();
 	private TextBox emailField = new TextBox();
 	
+	private Label errorMessage = new Label();
+	
 	public RegisterPanel() {
 		initComponents();
 	}
 	
 	private void initComponents() {
+		errorMessage.setText("");
+		errorMessage.addStyleName("errorMessage");
+		
 		loginNameLabel.setText("Login name");
 		passwordLabel.setText("Password");
 		passwordRetypeLabel.setText("Retype password");
@@ -43,6 +48,7 @@ public class RegisterPanel extends VerticalPanel{
 		grid.setWidget(3, 1, emailField);
 		
 		add(grid);
+		add(errorMessage);
 	}
 	
 	public String getLoginName() {
@@ -65,7 +71,21 @@ public class RegisterPanel extends VerticalPanel{
 		//TODO jobb implementáció
 		boolean emailValid = !getEmail().isEmpty();
 		
-		return (loginValid && passwordValid && emailValid);
+		boolean isValid = loginValid && passwordValid && emailValid;
+		
+		if(!loginValid) {
+			setErrorMessage("Login name is required!");
+		} else if(!passwordValid) {
+			setErrorMessage("Passwords are required and must match!");
+		} else if(!emailValid) {
+			setErrorMessage("Email is required!");
+		}
+		
+		return isValid;
+	}
+	
+	public void setErrorMessage(String message) {
+		this.errorMessage.setText(message);
 	}
 
 }

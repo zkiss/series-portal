@@ -1,7 +1,8 @@
 package hu.bme.viaum105.web.shared.dto.persistent;
 
-import java.text.DateFormat;
 import java.util.Date;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class CommentDto extends EntityBaseDto {
 
@@ -60,7 +61,7 @@ public class CommentDto extends EntityBaseDto {
     @Override
     public String toString() {
 	return super.toString() + "[" + //
-		(this.date == null ? "---" : DateFormat.getDateTimeInstance().format(this.date)) + //
+		(this.date == null ? "---" : DateTimeFormat.getFullDateFormat().format(this.date)) + //
 		" " + this.user + //
 		": " + this.comment + "]";
     }

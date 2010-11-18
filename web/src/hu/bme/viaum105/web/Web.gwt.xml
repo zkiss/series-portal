@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to='web'>
+
+
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
 
@@ -20,4 +22,5 @@
   <source path='client'/>
   <source path='shared'/>
 
+  <set-property name="user.agent" value="ie6" />
 </module>
