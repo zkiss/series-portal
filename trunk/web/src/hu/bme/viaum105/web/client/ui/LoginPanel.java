@@ -31,6 +31,7 @@ public class LoginPanel extends VerticalPanel{
 		loginNameLabel.setText("Login name");
 		passwordLabel.setText("Password");
 		
+		errorMessage.addStyleName("errorMessage");
 		errorMessage.setText("");
 		
 		Grid grid = new Grid(2, 2);

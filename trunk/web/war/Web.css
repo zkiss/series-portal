@@ -105,11 +105,13 @@ blockquote {
 }
 
 a {
-	color: #FF5A00;
+	font-weight: normal;
+	text-decoration: none;
+	color: #4169E1;
 }
 
 a:hover {
-	text-decoration: none;
+	text-decoration: underline;
 }
 
 a img {
@@ -204,7 +206,7 @@ img.right {
 
 #content {
 	float: left;
-	width: 555px;
+	width: 850px;
 	padding: 0 0 0 76px;
 }
 
@@ -228,4 +230,26 @@ img.right {
 
 #footer a {
 	color: #666666;
+}
+
+.deck {
+	width: 200px;
+	float: right;
+}
+
+.menuBar {
+	border: 1px solid #BBBBBB;
+	width: 300px;
+}
+
+.menuItem {
+	padding: 0px 10px;
+  	vertical-align: middle;
+  	color: #666666;
+  	font-weight: bold;
+}
+
+.errorMessage {
+	color: #FF2222;
+	font-weight: bold;
 }

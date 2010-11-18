@@ -50,7 +50,7 @@ public abstract class EntityBaseDto implements Serializable {
 
     @Override
     public String toString() {
-	return this.getClass().getSimpleName() + " [#" + this.id + "]";
+	return /*this.getClass().getSimpleName() + */" [#" + this.id + "]";
     }
 
 }
