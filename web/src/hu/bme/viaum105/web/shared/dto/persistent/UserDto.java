@@ -79,7 +79,7 @@ public class UserDto extends EntityBaseDto {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + this.loginName + "]";
+	return this.toString("UserDto") + "[" + this.loginName + "]";
     }
 
 }

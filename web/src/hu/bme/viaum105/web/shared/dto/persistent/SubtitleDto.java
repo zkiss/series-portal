@@ -12,6 +12,8 @@ public class SubtitleDto extends EntityBaseDto {
 
     private Date addedAt;
 
+    private SubtitleDataDto subtitleData;
+
     public Date getAddedAt() {
 	return this.addedAt;
     }
@@ -22,6 +24,10 @@ public class SubtitleDto extends EntityBaseDto {
 
     public String getFileName() {
 	return this.fileName;
+    }
+
+    public SubtitleDataDto getSubtitleData() {
+	return this.subtitleData;
     }
 
     public void setAddedAt(Date addedAt) {
@@ -36,9 +42,13 @@ public class SubtitleDto extends EntityBaseDto {
 	this.fileName = fileName;
     }
 
+    public void setSubtitleData(SubtitleDataDto subtitleData) {
+	this.subtitleData = subtitleData;
+    }
+
     @Override
     public String toString() {
-	return super.toString() + "[" + this.fileName + "]";
+	return this.toString("SubtitleDto") + "[" + this.fileName + "]";
     }
 
 }

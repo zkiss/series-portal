@@ -23,11 +23,12 @@ import hu.bme.viaum105.data.persistent.Rate;
 import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.Subtitle;
+import hu.bme.viaum105.data.persistent.SubtitleData;
 import hu.bme.viaum105.data.persistent.User;
 import hu.bme.viaum105.service.DaoException;
+import hu.bme.viaum105.service.ErrorType;
 import hu.bme.viaum105.service.SeriesPortal;
 import hu.bme.viaum105.service.ServerException;
-import hu.bme.viaum105.subtitle.SubtitleData;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,6 +60,24 @@ public class SeriesPortalImpl implements SeriesPortal {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void approveComment(long commentId) throws DaoException, ServerException {
+	SeriesPortalImpl.log.trace("approveComment");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    Comment comment = dao.getComment(commentId);
+	    if (comment == null) {
+		throw new ServerException(ErrorType.ILLEGAL_ARGUMENT, "No comment found with id #" + commentId);
+	    }
+	    comment.setApproved(true);
+	    dao.save(comment);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Comment comment(RegisteredEntity registeredEntity, User user, String comment) throws DaoException {
 	SeriesPortalImpl.log.trace("comment");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
@@ -68,7 +87,25 @@ public class SeriesPortalImpl implements SeriesPortal {
 	    ret.setDate(new Date());
 	    ret.setRegisteredEntity(registeredEntity);
 	    ret.setUser(user);
+	    ret.setApproved(false);
 	    return new SeriesPortalDao(entityManager).save(ret);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public SubtitleData downloadSubtitle(long subtitleId) throws DaoException, ServerException {
+	SeriesPortalImpl.log.trace("downloadSubtitle");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    SubtitleData subtitleData = dao.getSubtitleData(subtitleId);
+	    if (subtitleData == null) {
+		throw new ServerException(ErrorType.ILLEGAL_ARGUMENT, "There is no subtitle with id #" + subtitleId);
+	    }
+	    return subtitleData;
 	} finally {
 	    entityManager.close();
 	}
@@ -228,10 +265,15 @@ public class SeriesPortalImpl implements SeriesPortal {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Subtitle uploadSubtitle(Episode episode, Subtitle subtitle, SubtitleData subtitleData) throws DaoException, ServerException {
+    public Subtitle uploadSubtitle(Subtitle subtitle) throws DaoException, ServerException {
 	SeriesPortalImpl.log.trace("uploadSubtitle");
-	// TODO Auto-generated method stub
-	return null;
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.save(subtitle);
+	} finally {
+	    entityManager.close();
+	}
     }
 
 }

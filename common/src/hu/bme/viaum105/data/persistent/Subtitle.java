@@ -2,10 +2,13 @@ package hu.bme.viaum105.data.persistent;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,6 +30,13 @@ public class Subtitle extends EntityBase {
     @Temporal(TemporalType.TIMESTAMP)
     private Date addedAt;
 
+    /*
+     * Hibernate nem támogat lazy loadingot blob-okra
+     */
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "DATA_ID", nullable = false, unique = true)
+    private SubtitleData subtitleData;
+
     public Date getAddedAt() {
 	return this.addedAt;
     }
@@ -39,6 +49,10 @@ public class Subtitle extends EntityBase {
 	return this.fileName;
     }
 
+    public SubtitleData getSubtitleData() {
+	return this.subtitleData;
+    }
+
     public void setAddedAt(Date addedAt) {
 	this.addedAt = addedAt;
     }
@@ -49,6 +63,10 @@ public class Subtitle extends EntityBase {
 
     public void setFileName(String fileName) {
 	this.fileName = fileName;
+    }
+
+    public void setSubtitleData(SubtitleData subtitleData) {
+	this.subtitleData = subtitleData;
     }
 
     @Override

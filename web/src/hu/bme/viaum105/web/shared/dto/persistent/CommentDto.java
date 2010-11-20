@@ -60,7 +60,7 @@ public class CommentDto extends EntityBaseDto {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + //
+	return this.toString("CommentDto") + "[" + //
 		(this.date == null ? "---" : DateTimeFormat.getFullDateFormat().format(this.date)) + //
 		" " + this.user + //
 		": " + this.comment + "]";

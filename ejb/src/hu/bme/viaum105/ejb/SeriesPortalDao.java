@@ -6,12 +6,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import hu.bme.viaum105.data.persistent.Actor;
+import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.EntityBase;
 import hu.bme.viaum105.data.persistent.Label;
 import hu.bme.viaum105.data.persistent.Like;
 import hu.bme.viaum105.data.persistent.Rate;
 import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
+import hu.bme.viaum105.data.persistent.SubtitleData;
 import hu.bme.viaum105.data.persistent.User;
 import hu.bme.viaum105.service.DaoException;
 import hu.bme.viaum105.service.DaoHelper;
@@ -73,6 +75,18 @@ public class SeriesPortalDao {
 	return ret;
     }
 
+    public Comment getComment(long commentId) throws DaoException {
+	Comment ret = null;
+	try {
+	    ret = this.entityManager.find(Comment.class, commentId);
+	} catch (NoResultException e) {
+	    // nincs találat
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not get comment #" + commentId, e);
+	}
+	return ret;
+    }
+
     public Label getLabel(String label) throws DaoException {
 	Label ret;
 	try {
@@ -110,6 +124,20 @@ public class SeriesPortalDao {
 	} catch (RuntimeException e) {
 	    throw new DaoException("Could not determine rate for registered entity #" + registeredEntityId, e);
 	}
+    }
+
+    public SubtitleData getSubtitleData(long subtitleId) throws DaoException {
+	SubtitleData ret = null;
+	try {
+	    ret = (SubtitleData) this.entityManager.createQuery( //
+		    "select s from " + SubtitleData.class.getSimpleName() + " s where s.subtitle.id = :id"). //
+		    setParameter("id", subtitleId).getSingleResult();
+	} catch (NoResultException e) {
+	    // nincs ilyen subtitle
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not get subtitle data for subtitle #" + subtitleId, e);
+	}
+	return ret;
     }
 
     public User getUser(String loginname, String passwordHash) throws ServerException, DaoException {

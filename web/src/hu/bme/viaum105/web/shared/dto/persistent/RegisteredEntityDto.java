@@ -13,8 +13,6 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
     private static final long serialVersionUID = 5169037825980335358L;
 
     private String title;
-    
-    private String summary;
 
     private String description;
 
@@ -26,11 +24,6 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 
     private Set<RateDto> rates = new HashSet<RateDto>();
 
-    
-    public String getSummary() {
-		return summary;
-	}
-    
     public Set<CommentDto> getComments() {
 	return this.comments;
     }
@@ -55,10 +48,6 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 	return this.title;
     }
 
-    public void setSummary(String summary) {
-		this.summary = summary;
-	}
-    
     public void setDescription(String description) {
 	this.description = description;
     }
