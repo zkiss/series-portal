@@ -25,7 +25,7 @@ public class LabelDto extends EntityBaseDto {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + this.label + "]";
+	return this.toString("LabelDto") + "[" + this.label + "]";
     }
 
 }

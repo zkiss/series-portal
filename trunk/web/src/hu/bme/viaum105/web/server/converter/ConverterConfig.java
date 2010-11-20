@@ -14,6 +14,7 @@ import hu.bme.viaum105.data.persistent.Rate;
 import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.Subtitle;
+import hu.bme.viaum105.data.persistent.SubtitleData;
 import hu.bme.viaum105.data.persistent.User;
 import hu.bme.viaum105.web.server.converter.conversion.ConversionDefinition;
 import hu.bme.viaum105.web.shared.dto.nonpersistent.RoleDto;
@@ -25,6 +26,7 @@ import hu.bme.viaum105.web.shared.dto.persistent.LikeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.RateDto;
 import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+import hu.bme.viaum105.web.shared.dto.persistent.SubtitleDataDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SubtitleDto;
 import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
@@ -58,6 +60,7 @@ class ConverterConfig {
 	ConverterConfig.CONVERSION_DEFINITIONS.add(new ConversionDefinition(RegisteredEntity.class, RegisteredEntityDto.class));
 	ConverterConfig.CONVERSION_DEFINITIONS.add(new ConversionDefinition(Series.class, SeriesDto.class));
 	ConverterConfig.CONVERSION_DEFINITIONS.add(new ConversionDefinition(Subtitle.class, SubtitleDto.class));
+	ConverterConfig.CONVERSION_DEFINITIONS.add(new ConversionDefinition(SubtitleData.class, SubtitleDataDto.class));
 	ConverterConfig.CONVERSION_DEFINITIONS.add(new ConversionDefinition(User.class, UserDto.class));
 
 	BURNT_IN_CONFIG = new ConverterConfig(ConverterConfig.CONVERSION_DEFINITIONS);

@@ -41,7 +41,7 @@ public class Episode extends RegisteredEntity {
     @JoinTable(name = "EPISODE_ACTOR")
     private Set<Actor> actors = new HashSet<Actor>();
 
-    @OneToMany(mappedBy = "episode")
+    @OneToMany(mappedBy = "episode", fetch = FetchType.EAGER)
     private Set<Subtitle> subtitles = new HashSet<Subtitle>();
 
     public Actor addActor(String name) {

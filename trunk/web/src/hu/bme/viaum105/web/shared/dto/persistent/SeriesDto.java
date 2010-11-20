@@ -25,7 +25,7 @@ public class SeriesDto extends RegisteredEntityDto {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + this.getTitle() + "]";
+	return this.toString("SeriesDto") + "[" + this.getTitle() + "]";
     }
 
 }

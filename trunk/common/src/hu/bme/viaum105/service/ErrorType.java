@@ -13,6 +13,10 @@ public enum ErrorType {
      * Sikertelen bejelentkezés
      */
     LOGIN_ERROR, //
+    /**
+     * Hibás paraméter
+     */
+    ILLEGAL_ARGUMENT, //
 
     ;
 

@@ -9,8 +9,8 @@ import hu.bme.viaum105.data.persistent.Rate;
 import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.Subtitle;
+import hu.bme.viaum105.data.persistent.SubtitleData;
 import hu.bme.viaum105.data.persistent.User;
-import hu.bme.viaum105.subtitle.SubtitleData;
 
 public interface SeriesPortal {
 
@@ -18,6 +18,18 @@ public interface SeriesPortal {
      * A JNDI neve az EJB-nek
      */
     public final static String JNDI_NAME = "ejb/SeriesPortal";
+
+    /**
+     * Komment engedélyezése
+     * 
+     * @param commentId
+     *            a komment ID-je
+     * @throws DaoException
+     *             adatbázis hiba
+     * @throws ServerException
+     *             ha nincs ilyen id-jű komment
+     */
+    public void approveComment(long commentId) throws DaoException, ServerException;
 
     /**
      * Megjegyzés hozzáadása
@@ -29,6 +41,16 @@ public interface SeriesPortal {
      * @throws DaoException
      */
     public Comment comment(RegisteredEntity registeredEntity, User user, String comment) throws DaoException;
+
+    /**
+     * Felirat letöltése
+     * 
+     * @param subtitleId
+     * @return
+     * @throws DaoException
+     * @throws ServerException
+     */
+    public SubtitleData downloadSubtitle(long subtitleId) throws DaoException, ServerException;
 
     /**
      * Megmondja, hányan lájkolták már az adott ID-jű entitást
@@ -71,7 +93,7 @@ public interface SeriesPortal {
      * @throws DaoException
      * @throws ServerException
      */
-    public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;
+    public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;;
 
     /**
      * Bejelentkezés. Ha sikeres, visszatér a felhasználóval, ha sikertelen,
@@ -84,7 +106,7 @@ public interface SeriesPortal {
      * @throws ServerException
      *             sikertelen bejelentkezés esetén
      */
-    public User login(String loginname, String passwordHash) throws DaoException, ServerException;;
+    public User login(String loginname, String passwordHash) throws DaoException, ServerException;
 
     /**
      * Értékelés
@@ -136,6 +158,6 @@ public interface SeriesPortal {
      * @throws DaoException
      * @throws ServerException
      */
-    public Subtitle uploadSubtitle(Episode episode, Subtitle subtitle, SubtitleData subtitleData) throws DaoException, ServerException;
+    public Subtitle uploadSubtitle(Subtitle subtitle) throws DaoException, ServerException;
 
 }

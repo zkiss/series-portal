@@ -1,6 +1,5 @@
 package hu.bme.viaum105.web.shared.dto.persistent;
 
-
 public class RateDto extends EntityBaseDto {
 
     private static final long serialVersionUID = 7012992080457568073L;
@@ -37,7 +36,7 @@ public class RateDto extends EntityBaseDto {
 
     @Override
     public String toString() {
-	return super.toString() + "[" + this.rate + "]";
+	return this.toString("RateDto") + "[" + this.rate + "]";
     }
 
 }

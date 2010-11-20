@@ -15,6 +15,7 @@
 		<class>hu.bme.viaum105.data.persistent.RegisteredEntity</class>
 		<class>hu.bme.viaum105.data.persistent.Series</class>
 		<class>hu.bme.viaum105.data.persistent.Subtitle</class>
+		<class>hu.bme.viaum105.data.persistent.SubtitleData</class>
 		<class>hu.bme.viaum105.data.persistent.User</class>
 
 		<properties>

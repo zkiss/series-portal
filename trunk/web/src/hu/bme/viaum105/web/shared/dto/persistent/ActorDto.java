@@ -25,7 +25,7 @@ public class ActorDto extends EntityBaseDto {
 
     @Override
     public String toString() {
-	return super.toString() + "[name:" + this.name + "]";
+	return this.toString("ActorDto") + "[name:" + this.name + "]";
     }
 
 }
