@@ -149,6 +149,7 @@ public interface SeriesPortal {
     public Series save(Series series) throws DaoException;
 
     /**
+     * Keresés epizódok között
      * 
      * @param search
      * @return
@@ -157,6 +158,7 @@ public interface SeriesPortal {
     public List<Episode> searchEpisodes(String search) throws DaoException;
 
     /**
+     * Keresés a sorozatok között
      * 
      * @param search
      * @return
