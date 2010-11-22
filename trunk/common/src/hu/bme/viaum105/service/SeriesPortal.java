@@ -149,6 +149,22 @@ public interface SeriesPortal {
     public Series save(Series series) throws DaoException;
 
     /**
+     * 
+     * @param search
+     * @return
+     * @throws DaoException
+     */
+    public List<Episode> searchEpisodes(String search) throws DaoException;
+
+    /**
+     * 
+     * @param search
+     * @return
+     * @throws DaoException
+     */
+    public List<Series> searchSeries(String search) throws DaoException;
+
+    /**
      * Felirat feltöltése
      * 
      * @param episode

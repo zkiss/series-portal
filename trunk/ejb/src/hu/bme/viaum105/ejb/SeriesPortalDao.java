@@ -8,6 +8,7 @@ import javax.persistence.NoResultException;
 import hu.bme.viaum105.data.persistent.Actor;
 import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.EntityBase;
+import hu.bme.viaum105.data.persistent.Episode;
 import hu.bme.viaum105.data.persistent.Label;
 import hu.bme.viaum105.data.persistent.Like;
 import hu.bme.viaum105.data.persistent.Rate;
@@ -182,6 +183,32 @@ public class SeriesPortalDao {
 	    return this.entityManager.merge(entity);
 	} catch (RuntimeException e) {
 	    throw new DaoException("Could not save " + entity, e);
+	}
+    }
+
+    public List<Episode> searchEpisodes(String search) throws DaoException {
+	search = search.toLowerCase();
+	try {
+	    return DaoHelper.getResultList(this.entityManager.createQuery( //
+		    "select e from " + Episode.class.getSimpleName() + " e" + //
+			    " where lower(e.title) like :search" + //
+			    " or lower(e.description) like :search"). //
+		    setParameter("search", "%" + search + "%"), Episode.class);
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not search episodes: " + search, e);
+	}
+    }
+
+    public List<Series> searchSeries(String search) throws DaoException {
+	search = search.toLowerCase();
+	try {
+	    return DaoHelper.getResultList(this.entityManager.createQuery( //
+		    "select s from " + Series.class.getSimpleName() + " s" + //
+			    " where lower(s.title) like :search" + //
+			    " or lower(s.description) like :search"). //
+		    setParameter("search", "%" + search + "%"), Series.class);
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not search series: " + search, e);
 	}
     }
 

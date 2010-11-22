@@ -174,6 +174,7 @@ public class SeriesPortalImpl implements SeriesPortal {
     }
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public User login(String loginname, String passwordHash) throws DaoException, ServerException {
 	SeriesPortalImpl.log.trace("login");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
@@ -258,6 +259,32 @@ public class SeriesPortalImpl implements SeriesPortal {
 	    // label-ek kikeresése
 	    SeriesPortalImpl.switchLabels(dao, series);
 	    return dao.save(series);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<Episode> searchEpisodes(String search) throws DaoException {
+	SeriesPortalImpl.log.trace("searchEpisodes");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.searchEpisodes(search);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<Series> searchSeries(String search) throws DaoException {
+	SeriesPortalImpl.log.trace("searchSeries");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.searchSeries(search);
 	} finally {
 	    entityManager.close();
 	}
