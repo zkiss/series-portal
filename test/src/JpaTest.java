@@ -1,5 +1,6 @@
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,7 +19,7 @@ public class JpaTest {
 
     public static void main(String[] args) throws Exception {
 	EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("SERIESPORTAL");
-	new JpaTest(entityManagerFactory).testLazy2();
+	new JpaTest(entityManagerFactory).testSearch();
     }
 
     private final EntityManagerFactory entityManagerFactory;
@@ -37,7 +38,7 @@ public class JpaTest {
 	Series s = new Series();
 	s.setDescription("Teszt sorozat leírása");
 	s.setImdbUrl("http://www.imdb.com");
-	s.setTitle("Teszt sorozat");
+	s.setTitle("Teszt %");
 
 	s = dao.save(s);
 
@@ -48,10 +49,6 @@ public class JpaTest {
 	e.setEpisodeNumber(1);
 	e.setSeasonNumber(1);
 	e.setTitle("Epizód 1");
-
-	e.addActor("Első szereplő");
-	e.addActor("Második szereplő");
-	e.addLabel("vicces");
 
 	s.getEpisodes().add(e);
 
@@ -123,6 +120,13 @@ public class JpaTest {
 	em.close();
 	e.toString();
 	System.out.println(Converter.convert(e));
+    }
+
+    private void testSearch() {
+	EntityManager em = this.entityManagerFactory.createEntityManager();
+	List resultList = em.createQuery("select s from Series s where lower(s.title) like :ss or lower(s.description) like :ss").setParameter("ss", "%%")
+		.getResultList();
+	System.out.println(resultList);
     }
 
 }
