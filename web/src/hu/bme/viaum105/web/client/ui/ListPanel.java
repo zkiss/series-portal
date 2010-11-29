@@ -1,0 +1,137 @@
+package hu.bme.viaum105.web.client.ui;
+
+import hu.bme.viaum105.web.client.service.RegisteredEntityService;
+import hu.bme.viaum105.web.client.service.RegisteredEntityServiceAsync;
+import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
+import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
+public class ListPanel extends VerticalPanel {
+	
+	List<RegisteredEntityDto> listOfEntities;
+	ContentPanel contentPanel;
+	
+	ListBox orderingBox = new ListBox();
+	
+	private enum Ordering {
+		RATING,
+		LIKE,
+		TITLE,
+	}
+	
+	private Ordering ordering = Ordering.TITLE;
+	
+	RegisteredEntityServiceAsync entityService = 
+		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
+	
+	public ListPanel() {
+		listOfEntities = new LinkedList<RegisteredEntityDto>();
+		
+		((ServiceDefTarget) entityService).setServiceEntryPoint( 
+				GWT.getModuleBaseURL() + "RegisteredEntityService");
+
+		searchForEntites();
+		
+		orderingBox.addItem("by title", Ordering.TITLE.toString());
+		orderingBox.addItem("by rating", Ordering.RATING.toString());
+		orderingBox.addItem("by like", Ordering.LIKE.toString());
+		
+		orderingBox.addChangeHandler( new ChangeHandler() {
+			
+			public void onChange(ChangeEvent event) {
+				orderEntities(orderingBox.getValue(orderingBox.getSelectedIndex()));
+			}
+		});
+		
+		add(orderingBox);
+		
+	}
+	
+	public void searchForEntites() {
+		entityService.findAllSerie(new AsyncCallback<List<SeriesDto>>() {
+			
+			public void onSuccess(List<SeriesDto> result) {
+				listOfEntities.addAll(result);
+				showList();
+			}
+			
+			public void onFailure(Throwable caught) {
+				Window.alert("Hiba a sorozatok listázásakor! "+caught.getLocalizedMessage());
+			}
+		});
+	}
+	
+	public void setContentPanel(ContentPanel parent) {
+		this.contentPanel = parent;
+	}
+	
+	public ContentPanel getContentPanel() {
+		return contentPanel;
+	}
+	
+	public void setListOfEntities(List<RegisteredEntityDto> listOfEntities) {
+		this.listOfEntities = listOfEntities;
+	}
+	
+	public void showList() {
+		System.out.println("A lista elemek száma "+listOfEntities.size());
+		
+		clear();
+		
+		add(orderingBox);
+		
+		for(RegisteredEntityDto entity : listOfEntities) {
+			RegisteredEntitySummaryPanel subPanel = new RegisteredEntitySummaryPanel(entity, this);
+			add(subPanel);
+		}
+	}
+	
+	public void orderEntities(String selectedOption) {
+		
+		if(selectedOption.equals(Ordering.TITLE.toString())) {
+			Collections.sort(listOfEntities, new Comparator<RegisteredEntityDto>() {
+
+				public int compare(RegisteredEntityDto o1, RegisteredEntityDto o2) {
+					return o1.getTitle().compareTo(o2.getTitle());
+				}
+				
+			});
+			
+		} else if(selectedOption.equals(Ordering.RATING.toString())) {
+			Collections.sort(listOfEntities, new Comparator<RegisteredEntityDto>() {
+
+				public int compare(RegisteredEntityDto o1, RegisteredEntityDto o2) {
+					//TODO az entitásban nincs külön megadva az értékelés
+					
+					return 0;
+				}
+				
+			});
+			
+		} else if(selectedOption.equals(Ordering.LIKE.toString())) {
+			Collections.sort(listOfEntities, new Comparator<RegisteredEntityDto>() {
+
+				public int compare(RegisteredEntityDto o1, RegisteredEntityDto o2) {
+					//TODO az entitásban nincs külön megadva a like
+					
+					return 0;
+				}
+				
+			});
+		}
+	}
+
+}

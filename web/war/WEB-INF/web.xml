@@ -10,11 +10,22 @@
      <servlet-name>userServiceImpl</servlet-name>
      <servlet-class>hu.bme.viaum105.web.server.service.UserServiceImpl</servlet-class>
    </servlet>
+   
+   <servlet>
+     <servlet-name>registeredEntityServiceImpl</servlet-name>
+     <servlet-class>hu.bme.viaum105.web.server.service.RegisteredEntityServiceImpl</servlet-class>
+   </servlet>
+   
    <servlet-mapping>
      <servlet-name>userServiceImpl</servlet-name>
      <url-pattern>/web/UserService</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+     <servlet-name>registeredEntityServiceImpl</servlet-name>
+     <url-pattern>/web/RegisteredEntityService</url-pattern>
    </servlet-mapping>	
-	
+
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>Web.html</welcome-file>

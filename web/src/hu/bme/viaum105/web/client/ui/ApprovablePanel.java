@@ -19,12 +19,14 @@ public class ApprovablePanel extends VerticalPanel {
 		
 		buttonHolder.add(approveButton);
 		
+		super.add(buttonHolder);
+		
 	}
 	
 	@Override public void add(Widget w) {
-		//clear();
-		add(w);
-		add(buttonHolder);
+		clear();
+		super.add(w);
+		super.add(buttonHolder);
 	}
 	
 	public Button getApproveButton() {
