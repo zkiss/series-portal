@@ -6,10 +6,12 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class CreateSeriePanel extends VerticalPanel{
+public class CreateSerieForm extends VerticalPanel{
 	
 	private Label titleLabel = new Label("Title");
 	private TextBox titleField = new TextBox();
+	private Label directorLabel = new Label("Director");
+	private TextBox directorField = new TextBox();
 	private Label summaryLabel = new Label("Summary");
 	private TextArea summaryField = new TextArea();
 	private Label descriptionLabel = new Label("Description");
@@ -19,7 +21,7 @@ public class CreateSeriePanel extends VerticalPanel{
 	
 	private Label errorMessage = new Label("");
 	
-	public CreateSeriePanel() {
+	public CreateSerieForm() {
 		initComponents();
 	}
 	
@@ -27,16 +29,18 @@ public class CreateSeriePanel extends VerticalPanel{
 		
 		errorMessage.addStyleName("errorMessage");
 		
-		Grid grid = new Grid(4, 2);
+		Grid grid = new Grid(5, 2);
 		
 		grid.setWidget(0, 0, titleLabel);
 		grid.setWidget(0, 1, titleField);
-		grid.setWidget(1, 0, summaryLabel);
-		grid.setWidget(1, 1, summaryField);
-		grid.setWidget(2, 0, descriptionLabel);
-		grid.setWidget(2, 1, descriptionField);
-		grid.setWidget(3, 0, imdbUrlLabel);
-		grid.setWidget(3, 1, imdbUrlField);
+		grid.setWidget(1, 0, directorLabel);
+		grid.setWidget(1, 1, directorField);
+		grid.setWidget(2, 0, summaryLabel);
+		grid.setWidget(2, 1, summaryField);
+		grid.setWidget(3, 0, descriptionLabel);
+		grid.setWidget(3, 1, descriptionField);
+		grid.setWidget(4, 0, imdbUrlLabel);
+		grid.setWidget(4, 1, imdbUrlField);
 		
 		add(grid);
 		add(errorMessage);

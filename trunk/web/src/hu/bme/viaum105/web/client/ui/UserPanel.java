@@ -20,6 +20,8 @@ public class UserPanel extends DeckPanel {
 	HorizontalPanel beforeLoginPanel = new HorizontalPanel();
 	HorizontalPanel afterLoginPanel = new HorizontalPanel();
 	
+	WebMainPanel mainPanel;
+	
 	Label userName = new Label();
 	
 	UserServiceAsync userService = (UserServiceAsync) GWT.create(UserService.class);
@@ -64,11 +66,12 @@ public class UserPanel extends DeckPanel {
 		logoutAnchor.addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
+				mainPanel.setUser(null);
+				mainPanel.updateVisibility();
 				showWidget(0);
 			}
 		});
 		
-		addStyleName("deck");
 	}
 	
 	private void showLogin() {
@@ -84,24 +87,31 @@ public class UserPanel extends DeckPanel {
 				
 				if(loginName.isEmpty() || password.isEmpty()) {
 					loginPanel.setErrorMessage("The login and password field are required");
+				
+				} else {
+					userService.login(loginName, password, new AsyncCallback<UserDto>() {
+						
+						public void onSuccess(UserDto result) {
+							if(result == null) {
+								loginPanel.setErrorMessage("Bad login name or password");
+							} else {
+								userName.setText(result.getLoginName());
+								showWidget(1);
+								
+								dialogBox.hide();
+								
+								mainPanel.setUser(result);
+								mainPanel.updateVisibility();
+							}
+						}
+						
+						public void onFailure(Throwable caught) {
+							Window.alert("hiba: "+caught.getLocalizedMessage());
+						}
+					});
 				}
 				
-				userService.login(loginName, password, new AsyncCallback<UserDto>() {
-					
-					public void onSuccess(UserDto result) {
-						if(result == null) {
-							loginPanel.setErrorMessage("Bad login name or password");
-						} else {
-							userName.setText(result.getLoginName());
-							showWidget(1);
-							dialogBox.hide();
-						}
-					}
-					
-					public void onFailure(Throwable caught) {
-						Window.alert(caught.getLocalizedMessage());
-					}
-				});
+				
 				
 			}
 		});
@@ -172,6 +182,10 @@ public class UserPanel extends DeckPanel {
 		dialogBox.center();
 		dialogBox.show();
 		
+	}
+	
+	public void setMainPanel(WebMainPanel mainPanel) {
+		this.mainPanel = mainPanel;
 	}
 
 }

@@ -12,5 +12,5 @@ public interface UserServiceAsync {
 	void register(UserDto user, AsyncCallback<Void> callback);
 	
 	void isUserNameTaken(String userName, AsyncCallback<Boolean> callback);
-
+	
 }

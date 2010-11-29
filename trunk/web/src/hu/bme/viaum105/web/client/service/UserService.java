@@ -11,5 +11,5 @@ public interface UserService extends RemoteService{
 	void register(UserDto user);
 	
 	boolean isUserNameTaken(String userName);
-
+	
 }
