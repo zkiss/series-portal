@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -127,12 +126,6 @@ public class SeriesPortalImpl implements SeriesPortal {
 	} finally {
 	    entityManager.close();
 	}
-    }
-
-    @PreDestroy
-    @SuppressWarnings("unused")
-    private void destroy() {
-	this.entityManagerFactory.close();
     }
 
     @Override
