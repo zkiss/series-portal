@@ -36,7 +36,14 @@ public class WebMainPanel extends FlowPanel {
 	
 	public WebMainPanel() {
 		
+		//teszt
+		user = new UserDto();
+		user.setLoginName("zoli");
+		user.setRole(RoleDto.ADMIN);
+		
 		initComponents();
+		
+		
 	}
 	
 	/**
