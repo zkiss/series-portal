@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 import hu.bme.viaum105.data.persistent.Actor;
 import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.EntityBase;
+import hu.bme.viaum105.data.persistent.Episode;
 import hu.bme.viaum105.data.persistent.Label;
 import hu.bme.viaum105.data.persistent.Like;
 import hu.bme.viaum105.data.persistent.Rate;
@@ -178,6 +179,24 @@ public class SeriesPortalDao {
 	    throw new ServerException(ErrorType.LOGIN_ERROR, "No user found with the supplied loginname and password hash", e);
 	} catch (RuntimeException e) {
 	    throw new DaoException("Could not execute query", e);
+	}
+    }
+
+    public void handleLazyInitializedProperties(Episode episode) throws DaoException {
+	/*
+	 * Series property lazy init, de nem nullable. ezért ha null a series,
+	 * akkor hagyhatjuk az eredeti beállítást
+	 */
+	if (episode.getSeries() == null) {
+	    try {
+		Episode episodeInDb = this.entityManager.find(Episode.class, episode.getId());
+		if (episodeInDb == null) {
+		    throw new DaoException("Episode is deleted: " + episode);
+		}
+		episode.setSeries(episodeInDb.getSeries());
+	    } catch (RuntimeException e) {
+		throw new DaoException("Could not refresh series property of " + episode, e);
+	    }
 	}
     }
 
