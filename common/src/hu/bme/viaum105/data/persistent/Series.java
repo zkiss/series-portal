@@ -21,12 +21,23 @@ public class Series extends RegisteredEntity {
     @Column(name = "IMDB_URL", length = 255)
     private String imdbUrl;
 
+    @Column(name = "DIRECTOR", length = 100, nullable = false)
+    private String director;
+
+    public String getDirector() {
+	return this.director;
+    }
+
     public Set<Episode> getEpisodes() {
 	return this.episodes;
     }
 
     public String getImdbUrl() {
 	return this.imdbUrl;
+    }
+
+    public void setDirector(String director) {
+	this.director = director;
     }
 
     public void setImdbUrl(String imdbUrl) {

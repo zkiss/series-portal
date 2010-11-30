@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -39,6 +41,21 @@ import org.apache.commons.logging.LogFactory;
 public class SeriesPortalImpl implements SeriesPortal {
 
     private static final Log log = LogFactory.getLog(SeriesPortalImpl.class);
+
+    private static void switchActors(SeriesPortalDao dao, RegisteredEntity entity) throws DaoException {
+	HashSet<Actor> actorsInDb = new HashSet<Actor>();
+	for (Iterator<Actor> iterator = entity.getActors().iterator(); iterator.hasNext();) {
+	    Actor a = iterator.next();
+	    if (a.getId() == 0) {
+		Actor actorInDb = dao.getActor(a.getName());
+		if (actorInDb != null) {
+		    iterator.remove();
+		    actorsInDb.add(actorInDb);
+		}
+	    }
+	}
+	entity.getActors().addAll(actorsInDb);
+    }
 
     private static void switchLabels(SeriesPortalDao dao, RegisteredEntity entity) throws DaoException {
 	HashSet<Label> labelsInDb = new HashSet<Label>();
@@ -78,6 +95,24 @@ public class SeriesPortalImpl implements SeriesPortal {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void changeUserPassword(long userId, String newPassword) throws DaoException, ServerException {
+	SeriesPortalImpl.log.trace("changeUserPassword");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    User user = dao.getUser(userId);
+	    if (user == null) {
+		throw new ServerException(ErrorType.ILLEGAL_ARGUMENT, "No user found with id #" + userId);
+	    }
+	    user.setPassword(newPassword);
+	    dao.save(user);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Comment comment(RegisteredEntity registeredEntity, User user, String comment) throws DaoException {
 	SeriesPortalImpl.log.trace("comment");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
@@ -92,6 +127,12 @@ public class SeriesPortalImpl implements SeriesPortal {
 	} finally {
 	    entityManager.close();
 	}
+    }
+
+    @PreDestroy
+    @SuppressWarnings("unused")
+    private void destroy() {
+	this.entityManagerFactory.close();
     }
 
     @Override
@@ -135,10 +176,29 @@ public class SeriesPortalImpl implements SeriesPortal {
 	}
     }
 
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<Series> getTopRatedSeries() throws DaoException {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
     @PostConstruct
     @SuppressWarnings("unused")
     private void init() {
 	SeriesPortalImpl.log.trace("SeriesPortalImpl created");
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public boolean isLoginNameAvailable(String loginName) throws DaoException {
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.isLoginNameAvailable(loginName);
+	} finally {
+	    entityManager.close();
+	}
     }
 
     @Override
@@ -226,23 +286,8 @@ public class SeriesPortalImpl implements SeriesPortal {
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
 	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
-
-	    // label-ek kikeresése
 	    SeriesPortalImpl.switchLabels(dao, episode);
-
-	    // színészek kikeresése
-	    HashSet<Actor> actorsInDb = new HashSet<Actor>();
-	    for (Iterator<Actor> iterator = episode.getActors().iterator(); iterator.hasNext();) {
-		Actor a = iterator.next();
-		if (a.getId() == 0) {
-		    Actor actorInDb = dao.getActor(a.getName());
-		    if (actorInDb != null) {
-			iterator.remove();
-			actorsInDb.add(actorInDb);
-		    }
-		}
-	    }
-	    episode.getActors().addAll(actorsInDb);
+	    SeriesPortalImpl.switchActors(dao, episode);
 	    return dao.save(episode);
 	} finally {
 	    entityManager.close();
@@ -256,8 +301,8 @@ public class SeriesPortalImpl implements SeriesPortal {
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
 	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
-	    // label-ek kikeresése
 	    SeriesPortalImpl.switchLabels(dao, series);
+	    SeriesPortalImpl.switchActors(dao, series);
 	    return dao.save(series);
 	} finally {
 	    entityManager.close();
@@ -266,12 +311,12 @@ public class SeriesPortalImpl implements SeriesPortal {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<Episode> searchEpisodes(String search) throws DaoException {
-	SeriesPortalImpl.log.trace("searchEpisodes");
+    public List<RegisteredEntity> searchByActors(Set<String> actors) throws DaoException {
+	SeriesPortalImpl.log.trace("searchSeries");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
 	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
-	    return dao.searchEpisodes(search);
+	    return dao.searchByActors(actors);
 	} finally {
 	    entityManager.close();
 	}
@@ -279,15 +324,30 @@ public class SeriesPortalImpl implements SeriesPortal {
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<Series> searchSeries(String search) throws DaoException {
-	SeriesPortalImpl.log.trace("searchSeries");
-	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
-	try {
-	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
-	    return dao.searchSeries(search);
-	} finally {
-	    entityManager.close();
-	}
+    public List<RegisteredEntity> searchByDescription(String description) throws DaoException {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<RegisteredEntity> searchByLabels(Set<String> labels) throws DaoException {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<RegisteredEntity> searchByTitle(String title) throws DaoException {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<Series> searchSeriesByDirector(String director) throws DaoException {
+	// TODO Auto-generated method stub
+	return null;
     }
 
     @Override

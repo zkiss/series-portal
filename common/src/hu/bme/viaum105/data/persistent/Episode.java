@@ -4,13 +4,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -33,27 +30,15 @@ public class Episode extends RegisteredEntity {
     @Column(name = "EPISODE_NUMBER", nullable = false)
     private int episodeNumber;
 
+    @Column(name = "LENGTH_MINUTES", nullable = false)
+    private int lengthMinutes;
+
     @Column(name = "AIR_DATE")
     @Temporal(TemporalType.DATE)
     private Date airDate;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "EPISODE_ACTOR")
-    private Set<Actor> actors = new HashSet<Actor>();
-
     @OneToMany(mappedBy = "episode", fetch = FetchType.EAGER)
     private Set<Subtitle> subtitles = new HashSet<Subtitle>();
-
-    public Actor addActor(String name) {
-	Actor a = new Actor();
-	a.setName(name);
-	this.actors.add(a);
-	return a;
-    }
-
-    public Set<Actor> getActors() {
-	return this.actors;
-    }
 
     public Date getAirDate() {
 	return this.airDate;
@@ -61,6 +46,10 @@ public class Episode extends RegisteredEntity {
 
     public int getEpisodeNumber() {
 	return this.episodeNumber;
+    }
+
+    public int getLengthMinutes() {
+	return this.lengthMinutes;
     }
 
     public int getSeasonNumber() {
@@ -81,6 +70,10 @@ public class Episode extends RegisteredEntity {
 
     public void setEpisodeNumber(int episodeNumber) {
 	this.episodeNumber = episodeNumber;
+    }
+
+    public void setLengthMinutes(int lengthMinutes) {
+	this.lengthMinutes = lengthMinutes;
     }
 
     public void setSeasonNumber(int seasonNumber) {

@@ -14,22 +14,11 @@ public class EpisodeDto extends RegisteredEntityDto {
 
     private int episodeNumber;
 
+    private int lengthMinutes;
+
     private Date airDate;
 
-    private Set<ActorDto> actors = new HashSet<ActorDto>();
-
     private Set<SubtitleDto> subtitles = new HashSet<SubtitleDto>();
-
-    public ActorDto addActor(String name) {
-	ActorDto a = new ActorDto();
-	a.setName(name);
-	this.actors.add(a);
-	return a;
-    }
-
-    public Set<ActorDto> getActors() {
-	return this.actors;
-    }
 
     public Date getAirDate() {
 	return this.airDate;
@@ -37,6 +26,10 @@ public class EpisodeDto extends RegisteredEntityDto {
 
     public int getEpisodeNumber() {
 	return this.episodeNumber;
+    }
+
+    public int getLengthMinutes() {
+	return this.lengthMinutes;
     }
 
     public int getSeasonNumber() {
@@ -57,6 +50,10 @@ public class EpisodeDto extends RegisteredEntityDto {
 
     public void setEpisodeNumber(int episodeNumber) {
 	this.episodeNumber = episodeNumber;
+    }
+
+    public void setLengthMinutes(int lengthMinutes) {
+	this.lengthMinutes = lengthMinutes;
     }
 
     public void setSeasonNumber(int seasonNumber) {
