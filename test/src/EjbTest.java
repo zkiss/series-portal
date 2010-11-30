@@ -15,7 +15,7 @@ import hu.bme.viaum105.web.server.ServiceLocator;
 public class EjbTest {
 
     public static void main(String[] args) throws Exception {
-	new EjbTest(ServiceLocator.getInstance().getSeriesPortalService()).registerUser("admin");
+	new EjbTest(ServiceLocator.getInstance().getSeriesPortalService()).run();
     }
 
     private final SeriesPortal seriesPortalService;
@@ -95,7 +95,7 @@ public class EjbTest {
     private void run() throws Exception {
 	System.out.println("Run");
 	// this.registerUser("test");
-	User user = this.seriesPortalService.login("test", Util.md5Hash("test"));
+	User user = this.seriesPortalService.login("admin", Util.md5Hash("test"));
 	System.out.println("logged in");
 	List<Series> series = this.seriesPortalService.listSeriesPaged(20, 0);
 	this.listSeries(series);

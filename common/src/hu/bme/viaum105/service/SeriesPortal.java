@@ -84,14 +84,6 @@ public interface SeriesPortal {
     public Double getRate(long registeredEntityId) throws DaoException;
 
     /**
-     * A legjobbra értékelt sorozatok listázása
-     * 
-     * @return
-     * @throws DaoException
-     */
-    public List<Series> getTopRatedSeries() throws DaoException;
-
-    /**
      * Létezik-e már adott felhasználónévvel user
      * 
      * @param loginName
@@ -123,6 +115,19 @@ public interface SeriesPortal {
      * @throws ServerException
      */
     public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;
+
+    /**
+     * A legjobbra értékelt sorozatokat listázza ki. Ha egy sorozat még nem volt
+     * értékelve, a listában sem lesz benne.
+     * 
+     * @param pageSize
+     *            maximum hány elem legyen a visszaadott listában
+     * @param pageNumber
+     *            hányadik oldalt kérdezzük le. A számozás 0-tól indul
+     * @return
+     * @throws DaoException
+     */
+    public List<Series> listTopRatedSeries(int pageSize, int pageNumber) throws DaoException;
 
     /**
      * Bejelentkezés. Ha sikeres, visszatér a felhasználóval, ha sikertelen,

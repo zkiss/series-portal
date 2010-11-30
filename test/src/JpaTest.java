@@ -8,7 +8,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import hu.bme.viaum105.data.persistent.Episode;
-import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.Subtitle;
 import hu.bme.viaum105.data.persistent.SubtitleData;
@@ -135,7 +134,7 @@ public class JpaTest {
 	actors.add("Első színész");
 	actors.add("Els? színész");
 	SeriesPortalDao dao = new SeriesPortalDao(em);
-	List<RegisteredEntity> list = dao.searchByActors(actors);
+	List<Series> list = dao.listTopRatedSeries(10, 0);
 	System.out.println(list);
     }
 
