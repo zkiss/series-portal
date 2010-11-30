@@ -12,4 +12,6 @@ public interface UserServiceAsync {
 	
 	void isUserNameUnique(String userName, AsyncCallback<Boolean> callback);
 	
+	void changePassword(long id, String password, AsyncCallback<Void> callback);
+	
 }

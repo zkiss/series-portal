@@ -42,6 +42,7 @@ public class UserServiceImpl extends RemoteServiceServlet
 			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
 			
 			User u = Converter.convert(user);
+			u.setPassword(Util.md5Hash(user.getPassword()));
 			
 			services.register(u);
 			
@@ -54,12 +55,12 @@ public class UserServiceImpl extends RemoteServiceServlet
 	/**
 	 * Jelszó változtató szolgáltatás.
 	 */
-	public void changePassword(String password) {
+	public void changePassword(long id, String password) {
 		
 		try {
 			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
 						
-			//services.;
+			services.changeUserPassword(id, Util.md5Hash(password));
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -68,7 +69,18 @@ public class UserServiceImpl extends RemoteServiceServlet
 	}
 	
 	public boolean isUserNameUnique(String userName) {	
-		return true;
+		
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+						
+			return services.isLoginNameAvailable(userName);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 
 }

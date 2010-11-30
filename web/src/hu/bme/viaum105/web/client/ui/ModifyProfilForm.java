@@ -36,11 +36,15 @@ public class ModifyProfilForm extends VerticalPanel {
 		add(errorMessage);
 	}
 	
+	public String getNewPassword() {
+		return rePwdField.getText();
+	}
+	
 	public boolean isValid() {
 		boolean pwdValid = !pwdField.getText().isEmpty();
 		boolean pwd2Valid = !newPwdField.getText().isEmpty();
-		boolean pwd3Valid = !rePwdField.getText().isEmpty() && 
-								newPwdField.getText().equals(rePwdField.getText());
+		boolean pwd3Valid = !rePwdField.getText().isEmpty();
+		boolean matchesValid = newPwdField.getText().equals(rePwdField.getText());
 		
 		if(!pwdValid) {
 			setErrorMessage("Password is required!");
@@ -48,9 +52,11 @@ public class ModifyProfilForm extends VerticalPanel {
 			setErrorMessage("New password is required!");
 		} else if(!pwd3Valid) {
 			setErrorMessage("Retype password is required!");
+		} else if(!matchesValid) {
+			setErrorMessage("New passwords not match!");
 		}
 		
-		return pwdValid && pwd2Valid && pwd3Valid;
+		return pwdValid && pwd2Valid && pwd3Valid && matchesValid;
 	}
 	
 	public void setErrorMessage(String message) {
