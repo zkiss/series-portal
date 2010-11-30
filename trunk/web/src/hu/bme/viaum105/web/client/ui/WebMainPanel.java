@@ -36,13 +36,7 @@ public class WebMainPanel extends FlowPanel {
 	
 	public WebMainPanel() {
 		
-		//teszt
-		user = new UserDto();
-		user.setLoginName("zoli");
-		user.setRole(RoleDto.ADMIN);
-		
 		initComponents();
-		
 		
 	}
 	
@@ -123,11 +117,7 @@ public class WebMainPanel extends FlowPanel {
 			commentItem.setVisible(true);
 			
 		}
-		
-		
 	}
-	
-	
 	
 	public MenuItem createMenuItem(String menuLabel,
 			AbstractImagePrototype menuImage) {

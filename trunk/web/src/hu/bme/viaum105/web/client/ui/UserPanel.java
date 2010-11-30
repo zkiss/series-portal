@@ -2,6 +2,7 @@ package hu.bme.viaum105.web.client.ui;
 
 import hu.bme.viaum105.web.client.service.UserService;
 import hu.bme.viaum105.web.client.service.UserServiceAsync;
+import hu.bme.viaum105.web.shared.dto.nonpersistent.RoleDto;
 import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import com.google.gwt.core.client.GWT;
@@ -138,6 +139,7 @@ public class UserPanel extends DeckPanel {
 				
 				if(registerPanel.isValid()) {
 				
+					//TODO
 					userService.isUserNameTaken(registerPanel.getLoginName(), new AsyncCallback<Boolean>() {
 						
 						public void onSuccess(Boolean result) {
@@ -147,9 +149,11 @@ public class UserPanel extends DeckPanel {
 
 							} else {
 								UserDto user = new UserDto();
+								user.setDisplayName(registerPanel.getLoginName());
 								user.setLoginName(registerPanel.getLoginName());
 								user.setPassword(registerPanel.getPassword());
 								user.setEmail(registerPanel.getEmail());
+								user.setRole(RoleDto.USER);
 								userService.register(user, new AsyncCallback<Void>() {
 
 									public void onFailure(Throwable caught) {

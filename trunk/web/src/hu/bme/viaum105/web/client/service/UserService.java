@@ -6,7 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface UserService extends RemoteService{
 	
-	UserDto login(String userName, String password) throws IllegalArgumentException;
+	UserDto login(String userName, String password);
 	
 	void register(UserDto user);
 	

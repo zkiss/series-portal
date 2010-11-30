@@ -1,7 +1,10 @@
 package hu.bme.viaum105.web.server.service;
 
+import hu.bme.viaum105.data.persistent.User;
+import hu.bme.viaum105.service.SeriesPortal;
 import hu.bme.viaum105.web.client.service.UserService;
-import hu.bme.viaum105.web.shared.dto.nonpersistent.RoleDto;
+import hu.bme.viaum105.web.server.ServiceLocator;
+import hu.bme.viaum105.web.server.converter.Converter;
 import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -12,29 +15,58 @@ public class UserServiceImpl extends RemoteServiceServlet
 	//sorozatszám
 	private static final long serialVersionUID = -861141346800060747L;
 
-	public UserDto login(String userName, String password)
-			throws IllegalArgumentException {
+	public UserDto login(String userName, String password) {
 		
-		UserDto user = null;
-		
-		if(userName.equals("zoli") && password.equals("123")) {
-			user = new UserDto();
-			user.setLoginName("zoli");
-			user.setRole(RoleDto.ADMIN);
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			User u = services.login(userName, password);
+			
+			return Converter.convert(u);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		return user;
+		return null;
 	}
 	
+	/**
+	 * Regisztráció szolgáltatás.
+	 */
 	public void register(UserDto user) {
-		System.out.println("Regisztráció kész");
+		
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			User u = Converter.convert(user);
+			
+			services.register(u);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
-	public boolean isUserNameTaken(String userName) {
+	/**
+	 * Jelszó változtató szolgáltatás.
+	 */
+	public void changePassword(String password) {
 		
-		if("zoli".equals(userName)) {
-			return true;
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+						
+			//services.;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
+	
+	public boolean isUserNameTaken(String userName) {	
 		return false;
 	}
 

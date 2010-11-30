@@ -9,5 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 public interface RegisteredEntityService extends RemoteService {
 	
 	List<SeriesDto> findAllSerie();
+	
+	public void createNewSerie(SeriesDto serie);
 
 }
