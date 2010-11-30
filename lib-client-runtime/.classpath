@@ -95,5 +95,17 @@
 	<classpathentry exported="true" kind="lib" path="/lib/jboss-client/wsdl4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="/lib/jboss-client/wstx.jar"/>
 	<classpathentry exported="true" kind="lib" path="/lib/jboss-client/xmlsec.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/hibernate3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/antlr-2.7.6.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/commons-collections-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/dom4j.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/hibernate-annotations.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/hibernate-commons-annotations.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/hibernate-core.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/hibernate-entitymanager.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/javassist-3.9.0.GA.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/jta-1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/slf4j-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="/lib/hibernate/slf4j-log4j12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
