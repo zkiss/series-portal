@@ -11,12 +11,22 @@ public class SeriesDto extends RegisteredEntityDto {
 
     private String imdbUrl;
 
+    private String director;
+
+    public String getDirector() {
+	return this.director;
+    }
+
     public Set<EpisodeDto> getEpisodes() {
 	return this.episodes;
     }
 
     public String getImdbUrl() {
 	return this.imdbUrl;
+    }
+
+    public void setDirector(String director) {
+	this.director = director;
     }
 
     public void setImdbUrl(String imdbUrl) {

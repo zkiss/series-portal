@@ -19,14 +19,14 @@ public class Actor extends EntityBase {
     private String name;
 
     @ManyToMany(mappedBy = "actors", fetch = FetchType.LAZY)
-    private Set<Episode> episodes = new HashSet<Episode>();
-
-    public Set<Episode> getEpisodes() {
-	return this.episodes;
-    }
+    private Set<RegisteredEntity> registeredEntities = new HashSet<RegisteredEntity>();
 
     public String getName() {
 	return this.name;
+    }
+
+    public Set<RegisteredEntity> getRegisteredEntities() {
+	return this.registeredEntities;
     }
 
     public void setName(String name) {

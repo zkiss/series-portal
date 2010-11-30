@@ -16,6 +16,11 @@
 		<ant dir="${dir-web}" target="dist" />
 	</target>
 
+	<target name="deploy-ejb" description="Csak az EJB deployolása. Fejlesztést elősegítő task.">
+		<ant dir="${dir-common}" target="deploy" />
+		<ant dir="${dir-ejb}" target="deploy" />
+	</target>
+	
 	<target name="deploy">
 		<ant dir="${dir-common}" target="deploy" />
 		<ant dir="${dir-ejb}" target="deploy" />

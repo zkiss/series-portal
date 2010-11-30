@@ -1,7 +1,9 @@
 package hu.bme.viaum105.service;
 
 import java.util.List;
+import java.util.Set;
 
+import hu.bme.viaum105.Util;
 import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.Episode;
 import hu.bme.viaum105.data.persistent.Like;
@@ -30,6 +32,16 @@ public interface SeriesPortal {
      *             ha nincs ilyen id-jű komment
      */
     public void approveComment(long commentId) throws DaoException, ServerException;
+
+    /**
+     * Felhasználó jelszavának megváltoztatása
+     * 
+     * @param userId
+     * @param newPassword
+     * @throws DaoException
+     * @throws ServerException
+     */
+    public void changeUserPassword(long userId, String newPassword) throws DaoException, ServerException;
 
     /**
      * Megjegyzés hozzáadása
@@ -72,6 +84,23 @@ public interface SeriesPortal {
     public Double getRate(long registeredEntityId) throws DaoException;
 
     /**
+     * A legjobbra értékelt sorozatok listázása
+     * 
+     * @return
+     * @throws DaoException
+     */
+    public List<Series> getTopRatedSeries() throws DaoException;
+
+    /**
+     * Létezik-e már adott felhasználónévvel user
+     * 
+     * @param loginName
+     * @return
+     * @throws DaoException
+     */
+    public boolean isLoginNameAvailable(String loginName) throws DaoException;;
+
+    /**
      * Lájkolás
      * 
      * @param registeredEntity
@@ -93,7 +122,7 @@ public interface SeriesPortal {
      * @throws DaoException
      * @throws ServerException
      */
-    public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;;
+    public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException;
 
     /**
      * Bejelentkezés. Ha sikeres, visszatér a felhasználóval, ha sikertelen,
@@ -101,6 +130,8 @@ public interface SeriesPortal {
      * 
      * @param loginname
      * @param passwordHash
+     *            a jelszó hash-e. Hasheléshez használjuk a
+     *            {@link Util#md5Hash(String)} metódust!
      * @return
      * @throws DaoException
      * @throws ServerException
@@ -149,22 +180,51 @@ public interface SeriesPortal {
     public Series save(Series series) throws DaoException;
 
     /**
-     * Keresés epizódok között
+     * Keresés színészek alapján. Visszaad minden olyan entitást, amiben
+     * szerepel bármelyik a megadott színészek közül
      * 
-     * @param search
+     * @param actors
+     *            keresett színészek nevei
      * @return
      * @throws DaoException
      */
-    public List<Episode> searchEpisodes(String search) throws DaoException;
+    public List<RegisteredEntity> searchByActors(Set<String> actors) throws DaoException;
 
     /**
-     * Keresés a sorozatok között
+     * Keresés leírás alapján
      * 
-     * @param search
+     * @param description
      * @return
      * @throws DaoException
      */
-    public List<Series> searchSeries(String search) throws DaoException;
+    public List<RegisteredEntity> searchByDescription(String description) throws DaoException;
+
+    /**
+     * Keresés címkék alapján
+     * 
+     * @param labels
+     * @return
+     * @throws DaoException
+     */
+    public List<RegisteredEntity> searchByLabels(Set<String> labels) throws DaoException;
+
+    /**
+     * Epizód/Sorozat keresése cím alapján
+     * 
+     * @param title
+     * @return
+     * @throws DaoException
+     */
+    public List<RegisteredEntity> searchByTitle(String title) throws DaoException;
+
+    /**
+     * Sorozatok keresése rendező alapján
+     * 
+     * @param director
+     * @return
+     * @throws DaoException
+     */
+    public List<Series> searchSeriesByDirector(String director) throws DaoException;
 
     /**
      * Felirat feltöltése

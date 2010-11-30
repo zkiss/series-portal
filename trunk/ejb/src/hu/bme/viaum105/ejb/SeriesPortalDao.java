@@ -1,6 +1,9 @@
 package hu.bme.viaum105.ejb;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -8,7 +11,6 @@ import javax.persistence.NoResultException;
 import hu.bme.viaum105.data.persistent.Actor;
 import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.EntityBase;
-import hu.bme.viaum105.data.persistent.Episode;
 import hu.bme.viaum105.data.persistent.Label;
 import hu.bme.viaum105.data.persistent.Like;
 import hu.bme.viaum105.data.persistent.Rate;
@@ -103,6 +105,13 @@ public class SeriesPortalDao {
 	return ret;
     }
 
+    private <T extends RegisteredEntity> void getLikeCntAndRates(Collection<T> entities) throws DaoException {
+	for (T entity : entities) {
+	    entity.setRate(this.getRate(entity.getId()));
+	    entity.setLikeCount(this.getLikeCount(entity.getId()));
+	}
+    }
+
     public long getLikeCount(long registeredEntityId) throws DaoException {
 	try {
 	    Number ret = (Number) this.entityManager.createQuery( //
@@ -141,6 +150,21 @@ public class SeriesPortalDao {
 	return ret;
     }
 
+    public User getUser(long userId) throws DaoException {
+	User ret;
+	try {
+	    ret = (User) this.entityManager.createQuery( //
+		    "select u from " + User.class.getSimpleName() + " u" + //
+			    " where u.id = :userId"). //
+		    setParameter("userId", userId).getSingleResult();
+	} catch (NoResultException e) {
+	    ret = null;
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not execute query", e);
+	}
+	return ret;
+    }
+
     public User getUser(String loginname, String passwordHash) throws ServerException, DaoException {
 	try {
 	    return (User) this.entityManager.createQuery( //
@@ -156,11 +180,25 @@ public class SeriesPortalDao {
 	}
     }
 
+    public boolean isLoginNameAvailable(String loginName) throws DaoException {
+	try {
+	    Number cnt = (Number) this.entityManager.createQuery( //
+		    "select count(u) from " + User.class.getSimpleName() + " u" + //
+			    " where lower(u.loginName) = :loginName"). //
+		    setParameter("loginName", loginName.toLowerCase()).getSingleResult();
+	    return cnt.longValue() == 0;
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not determine if login name is free: " + loginName, e);
+	}
+    }
+
     public List<Series> listSeriesPaged(int pageSize, int pageNumber) throws DaoException {
-	return DaoHelper.getResultList(this.entityManager.createQuery( //
+	List<Series> series = DaoHelper.getResultList(this.entityManager.createQuery( //
 		"select s from " + Series.class.getSimpleName() + " s order by s.title asc"). //
 		setMaxResults(pageSize). //
 		setFirstResult(pageSize * pageNumber), Series.class);
+	this.getLikeCntAndRates(series);
+	return series;
     }
 
     public User register(User user) throws DaoException, ServerException {
@@ -186,30 +224,21 @@ public class SeriesPortalDao {
 	}
     }
 
-    public List<Episode> searchEpisodes(String search) throws DaoException {
-	search = search.toLowerCase();
+    public List<RegisteredEntity> searchByActors(Set<String> actors) throws DaoException {
+	TreeSet<String> actorNames = new TreeSet<String>();
+	for (String actorName : actors) {
+	    actorNames.add(actorName.toLowerCase());
+	}
 	try {
-	    return DaoHelper.getResultList(this.entityManager.createQuery( //
-		    "select e from " + Episode.class.getSimpleName() + " e" + //
-			    " where lower(e.title) like :search" + //
-			    " or lower(e.description) like :search"). //
-		    setParameter("search", "%" + search + "%"), Episode.class);
+	    List<RegisteredEntity> entities = DaoHelper.getResultList(this.entityManager.createQuery( //
+		    "select re from " + RegisteredEntity.class.getSimpleName() + " re" + //
+			    " inner join re.actors a" + //
+			    " where lower(a.name) in (:actors)"). //
+		    setParameter("actors", actorNames), RegisteredEntity.class);
+	    this.getLikeCntAndRates(entities);
+	    return entities;
 	} catch (RuntimeException e) {
-	    throw new DaoException("Could not search episodes: " + search, e);
+	    throw new DaoException("Could not search by actors: " + actorNames, e);
 	}
     }
-
-    public List<Series> searchSeries(String search) throws DaoException {
-	search = search.toLowerCase();
-	try {
-	    return DaoHelper.getResultList(this.entityManager.createQuery( //
-		    "select s from " + Series.class.getSimpleName() + " s" + //
-			    " where lower(s.title) like :search" + //
-			    " or lower(s.description) like :search"). //
-		    setParameter("search", "%" + search + "%"), Series.class);
-	} catch (RuntimeException e) {
-	    throw new DaoException("Could not search series: " + search, e);
-	}
-    }
-
 }

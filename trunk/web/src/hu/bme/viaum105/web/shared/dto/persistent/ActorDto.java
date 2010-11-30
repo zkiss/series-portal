@@ -9,14 +9,14 @@ public class ActorDto extends EntityBaseDto {
 
     private String name;
 
-    private Set<EpisodeDto> episodes = new HashSet<EpisodeDto>();
-
-    public Set<EpisodeDto> getEpisodes() {
-	return this.episodes;
-    }
+    private Set<RegisteredEntityDto> registeredEntities = new HashSet<RegisteredEntityDto>();
 
     public String getName() {
 	return this.name;
+    }
+
+    public Set<RegisteredEntityDto> getRegisteredEntities() {
+	return this.registeredEntities;
     }
 
     public void setName(String name) {

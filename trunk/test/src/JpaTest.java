@@ -1,12 +1,14 @@
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import hu.bme.viaum105.data.persistent.Episode;
+import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
 import hu.bme.viaum105.data.persistent.Subtitle;
 import hu.bme.viaum105.data.persistent.SubtitleData;
@@ -36,9 +38,12 @@ public class JpaTest {
 	SeriesPortalDao dao = new SeriesPortalDao(entityManager);
 
 	Series s = new Series();
+	s.setDirector("Stephen Spielberg");
 	s.setDescription("Teszt sorozat leírása");
 	s.setImdbUrl("http://www.imdb.com");
 	s.setTitle("Teszt %");
+
+	s.addActor("Sorozat színész");
 
 	s = dao.save(s);
 
@@ -49,6 +54,8 @@ public class JpaTest {
 	e.setEpisodeNumber(1);
 	e.setSeasonNumber(1);
 	e.setTitle("Epizód 1");
+	e.addActor("Első színész");
+	e.addActor("Második Szereplő");
 
 	s.getEpisodes().add(e);
 
@@ -122,11 +129,14 @@ public class JpaTest {
 	System.out.println(Converter.convert(e));
     }
 
-    private void testSearch() {
+    private void testSearch() throws Exception {
 	EntityManager em = this.entityManagerFactory.createEntityManager();
-	List resultList = em.createQuery("select s from Series s where lower(s.title) like :ss or lower(s.description) like :ss").setParameter("ss", "%%")
-		.getResultList();
-	System.out.println(resultList);
+	TreeSet<String> actors = new TreeSet<String>();
+	actors.add("Első színész");
+	actors.add("Els? színész");
+	SeriesPortalDao dao = new SeriesPortalDao(em);
+	List<RegisteredEntity> list = dao.searchByActors(actors);
+	System.out.println(list);
     }
 
 }

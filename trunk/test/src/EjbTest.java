@@ -15,7 +15,7 @@ import hu.bme.viaum105.web.server.ServiceLocator;
 public class EjbTest {
 
     public static void main(String[] args) throws Exception {
-	new EjbTest(ServiceLocator.getInstance().getSeriesPortalService()).makeSeries("Friends");
+	new EjbTest(ServiceLocator.getInstance().getSeriesPortalService()).registerUser("admin");
     }
 
     private final SeriesPortal seriesPortalService;
@@ -55,6 +55,7 @@ public class EjbTest {
 
     private void makeSeries(String title) throws DaoException {
 	Series s = new Series();
+	s.setDirector("Stephen Spielberg");
 	s.setTitle(title);
 	s.setDescription(title + " description");
 	s.setImdbUrl("www.imdb.com/" + title.replace(" ", "_"));

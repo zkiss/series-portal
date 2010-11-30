@@ -18,11 +18,28 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 
     private Set<LabelDto> labels = new HashSet<LabelDto>();
 
+    private Set<ActorDto> actors = new HashSet<ActorDto>();
+
     private Set<CommentDto> comments = new HashSet<CommentDto>();
 
     private Set<LikeDto> likes = new HashSet<LikeDto>();
 
     private Set<RateDto> rates = new HashSet<RateDto>();
+
+    private long likeCount;
+
+    private Double rate;
+
+    public ActorDto addActor(String name) {
+	ActorDto a = new ActorDto();
+	a.setName(name);
+	this.actors.add(a);
+	return a;
+    }
+
+    public Set<ActorDto> getActors() {
+	return this.actors;
+    }
 
     public Set<CommentDto> getComments() {
 	return this.comments;
@@ -36,8 +53,16 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 	return this.labels;
     }
 
+    public long getLikeCount() {
+	return this.likeCount;
+    }
+
     public Set<LikeDto> getLikes() {
 	return this.likes;
+    }
+
+    public Double getRate() {
+	return this.rate;
     }
 
     public Set<RateDto> getRates() {
@@ -50,6 +75,14 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 
     public void setDescription(String description) {
 	this.description = description;
+    }
+
+    public void setLikeCount(long likeCount) {
+	this.likeCount = likeCount;
+    }
+
+    public void setRate(Double rate) {
+	this.rate = rate;
     }
 
     public void setTitle(String title) {
