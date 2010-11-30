@@ -294,6 +294,7 @@ public class SeriesPortalImpl implements SeriesPortal {
 	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
 	    SeriesPortalImpl.switchLabels(dao, episode);
 	    SeriesPortalImpl.switchActors(dao, episode);
+	    dao.handleLazyInitializedProperties(episode);
 	    return dao.save(episode);
 	} finally {
 	    entityManager.close();
