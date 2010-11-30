@@ -66,8 +66,8 @@ public class UserServiceImpl extends RemoteServiceServlet
 		}
 	}
 	
-	public boolean isUserNameTaken(String userName) {	
-		return false;
+	public boolean isUserNameUnique(String userName) {	
+		return true;
 	}
 
 }
