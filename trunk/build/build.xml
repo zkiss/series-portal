@@ -10,12 +10,6 @@
 		<ant dir="${dir-web}" target="clean" />
 	</target>
 
-	<target name="compile-all">
-		<ant dir="${dir-common}" target="compile" />
-		<ant dir="${dir-ejb}" target="compile" />
-		<ant dir="${dir-web}" target="compile" />
-	</target>
-
 	<target name="dist-all">
 		<ant dir="${dir-common}" target="dist" />
 		<ant dir="${dir-ejb}" target="dist" />
