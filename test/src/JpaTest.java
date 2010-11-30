@@ -1,6 +1,5 @@
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.TreeSet;
 
 import javax.persistence.EntityManager;
@@ -134,8 +133,8 @@ public class JpaTest {
 	actors.add("Első színész");
 	actors.add("Els? színész");
 	SeriesPortalDao dao = new SeriesPortalDao(em);
-	List<Series> list = dao.listTopRatedSeries(10, 0);
-	System.out.println(list);
+	dao.listTopRatedSeries(10, 0);
+	System.out.println(dao.listUnapprovedComments(100, 0));
     }
 
 }

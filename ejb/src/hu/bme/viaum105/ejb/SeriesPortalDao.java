@@ -243,6 +243,19 @@ public class SeriesPortalDao {
 	}
     }
 
+    public List<Comment> listUnapprovedComments(int pageSize, int pageNumber) throws DaoException {
+	try {
+	    return DaoHelper.getResultList(this.entityManager.createQuery(//
+		    "select c from " + Comment.class.getSimpleName() + " c" + //
+			    " where c.isApproved = :approved"). //
+		    setParameter("approved", false). //
+		    setMaxResults(pageSize). //
+		    setFirstResult(pageSize * pageNumber), Comment.class);
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not list unapproved comments", e);
+	}
+    }
+
     public User register(User user) throws DaoException, ServerException {
 	try {
 	    Long cnt = (Long) this.entityManager.createQuery( //
