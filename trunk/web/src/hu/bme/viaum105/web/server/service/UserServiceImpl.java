@@ -1,5 +1,6 @@
 package hu.bme.viaum105.web.server.service;
 
+import hu.bme.viaum105.Util;
 import hu.bme.viaum105.data.persistent.User;
 import hu.bme.viaum105.service.SeriesPortal;
 import hu.bme.viaum105.web.client.service.UserService;
@@ -20,7 +21,7 @@ public class UserServiceImpl extends RemoteServiceServlet
 		try {
 			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
 			
-			User u = services.login(userName, password);
+			User u = services.login(userName, Util.md5Hash(password));
 			
 			return Converter.convert(u);
 			
