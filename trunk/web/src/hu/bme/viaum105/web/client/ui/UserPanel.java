@@ -140,7 +140,7 @@ public class UserPanel extends DeckPanel {
 				if(registerPanel.isValid()) {
 				
 					//TODO
-					userService.isUserNameTaken(registerPanel.getLoginName(), new AsyncCallback<Boolean>() {
+					userService.isUserNameUnique(registerPanel.getLoginName(), new AsyncCallback<Boolean>() {
 						
 						public void onSuccess(Boolean result) {
 							if(!result) {
