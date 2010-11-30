@@ -23,14 +23,19 @@ public class ContentPanel extends DeckPanel {
 	
 	public void initComponents() {
 		
-		CreateSerieForm panel = GWT.create(CreateSerieForm.class);
+		final CreateSerieForm panel = GWT.create(CreateSerieForm.class);
 		
 		createSeriePanel.add(panel);
 		createSeriePanel.getApproveButton().setText("Submit");
 		createSeriePanel.getApproveButton().addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
-				System.out.println("onclick");
+				if(panel.isValid()) {
+					//TODO létrehozzuk a dto objektumot és meghívjuk a megfelelő szolgáltatást.
+					panel.setErrorMessage("");
+					
+					showBrowseSeries();
+				}
 			}
 		});
 		
