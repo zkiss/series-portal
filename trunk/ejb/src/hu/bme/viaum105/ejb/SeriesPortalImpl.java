@@ -176,13 +176,6 @@ public class SeriesPortalImpl implements SeriesPortal {
 	}
     }
 
-    @Override
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-    public List<Series> getTopRatedSeries() throws DaoException {
-	// TODO Auto-generated method stub
-	return null;
-    }
-
     @PostConstruct
     @SuppressWarnings("unused")
     private void init() {
@@ -228,6 +221,19 @@ public class SeriesPortalImpl implements SeriesPortal {
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
 	    return new SeriesPortalDao(entityManager).listSeriesPaged(pageSize, pageNumber);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
+    public List<Series> listTopRatedSeries(int pageSize, int pageNumber) throws DaoException {
+	SeriesPortalImpl.log.trace("getTopRatedSeries");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.listTopRatedSeries(pageSize, pageNumber);
 	} finally {
 	    entityManager.close();
 	}
@@ -312,7 +318,7 @@ public class SeriesPortalImpl implements SeriesPortal {
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<RegisteredEntity> searchByActors(Set<String> actors) throws DaoException {
-	SeriesPortalImpl.log.trace("searchSeries");
+	SeriesPortalImpl.log.trace("searchByActors");
 	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
 	try {
 	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
@@ -325,29 +331,53 @@ public class SeriesPortalImpl implements SeriesPortal {
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<RegisteredEntity> searchByDescription(String description) throws DaoException {
-	// TODO Auto-generated method stub
-	return null;
+	SeriesPortalImpl.log.trace("searchByDescription");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.searchByDescription(description);
+	} finally {
+	    entityManager.close();
+	}
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<RegisteredEntity> searchByLabels(Set<String> labels) throws DaoException {
-	// TODO Auto-generated method stub
-	return null;
+	SeriesPortalImpl.log.trace("searchByLabels");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.searchByLabels(labels);
+	} finally {
+	    entityManager.close();
+	}
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<RegisteredEntity> searchByTitle(String title) throws DaoException {
-	// TODO Auto-generated method stub
-	return null;
+	SeriesPortalImpl.log.trace("searchByTitle");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.searchByTitle(title);
+	} finally {
+	    entityManager.close();
+	}
     }
 
     @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public List<Series> searchSeriesByDirector(String director) throws DaoException {
-	// TODO Auto-generated method stub
-	return null;
+	SeriesPortalImpl.log.trace("searchSeriesByDirector");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.searchSeriesByDirector(director);
+	} finally {
+	    entityManager.close();
+	}
     }
 
     @Override
