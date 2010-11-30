@@ -12,4 +12,6 @@ public interface UserService extends RemoteService{
 	
 	boolean isUserNameUnique(String userName);
 	
+	public void changePassword(long id, String password);
+	
 }

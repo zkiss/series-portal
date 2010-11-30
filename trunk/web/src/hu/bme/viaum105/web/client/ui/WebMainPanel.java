@@ -80,6 +80,8 @@ public class WebMainPanel extends FlowPanel {
 		menu.setStyleName("menuBar");
 		
 		userPanel.setMainPanel(this);
+		contentPanel.setMainPanel(this);
+		
 		
 		VerticalPanel side = new VerticalPanel();
 		side.add(userPanel);
@@ -96,6 +98,10 @@ public class WebMainPanel extends FlowPanel {
 	
 	public void setUser(UserDto user) {
 		this.user = user;
+	}
+	
+	public UserDto getUser() {
+		return user;
 	}
 	
 	public void updateVisibility() {
