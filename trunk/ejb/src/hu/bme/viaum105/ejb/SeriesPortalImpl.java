@@ -233,6 +233,18 @@ public class SeriesPortalImpl implements SeriesPortal {
     }
 
     @Override
+    public List<Comment> listUnapprovedComments(int pageSize, int pageNumber) throws DaoException {
+	SeriesPortalImpl.log.trace("listUnapprovedComments");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.listUnapprovedComments(pageSize, pageNumber);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public User login(String loginname, String passwordHash) throws DaoException, ServerException {
 	SeriesPortalImpl.log.trace("login");

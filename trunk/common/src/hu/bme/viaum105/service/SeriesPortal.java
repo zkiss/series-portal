@@ -37,7 +37,9 @@ public interface SeriesPortal {
      * Felhasználó jelszavának megváltoztatása
      * 
      * @param userId
+     *            a felhasználó azonosítója
      * @param newPassword
+     *            hashelt jelszó: {@link Util#md5Hash(String)}
      * @throws DaoException
      * @throws ServerException
      */
@@ -128,6 +130,18 @@ public interface SeriesPortal {
      * @throws DaoException
      */
     public List<Series> listTopRatedSeries(int pageSize, int pageNumber) throws DaoException;
+
+    /**
+     * A nem jóváhagyott hozzászólások listázása
+     * 
+     * @param pageSize
+     *            maximum hány elem legyen a visszaadott listában
+     * @param pageNumber
+     *            hányadik oldalt kérdezzük le. A számozás 0-tól indul
+     * @return
+     * @throws DaoException
+     */
+    public List<Comment> listUnapprovedComments(int pageSize, int pageNumber) throws DaoException;
 
     /**
      * Bejelentkezés. Ha sikeres, visszatér a felhasználóval, ha sikertelen,
