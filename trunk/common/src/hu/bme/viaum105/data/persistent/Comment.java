@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -22,7 +23,7 @@ public class Comment extends EntityBase {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "REGISTERED_ENTITY_ID", nullable = false)
     private RegisteredEntity registeredEntity;
 
