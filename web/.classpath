@@ -6,5 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/lib-common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/lib-client-runtime"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
