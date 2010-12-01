@@ -104,8 +104,12 @@ public class WebMainPanel extends FlowPanel {
 		return user;
 	}
 	
+	/**
+	 * Akkor hívódik ha a felhasználó bejelentkezett vagy kijelentkezett.
+	 */
 	public void updateVisibility() {
-	
+		contentPanel.showBrowseSeries();
+		
 		//felhasználó nincs még bejelentkezve, vagy kilépett
 		if(user == null) {
 			createSerieItem.setVisible(false);

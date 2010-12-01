@@ -1,5 +1,6 @@
 package hu.bme.viaum105.web.client.service;
 
+import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
 
 import java.util.List;
@@ -10,6 +11,8 @@ public interface RegisteredEntityService extends RemoteService {
 	
 	List<SeriesDto> findAllSeries();
 	
-	public void createNewSeries(SeriesDto series);
+	void createNewSeries(SeriesDto series);
+	
+	void createNewEpisode(EpisodeDto episode);
 
 }

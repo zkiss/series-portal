@@ -1,7 +1,16 @@
 package hu.bme.viaum105.web.client.ui;
 
+import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -20,15 +29,21 @@ public class RegisteredEntityPanel extends VerticalPanel {
 	private Label likeLabel = new Label("Like");
 	private Label rateLabel = new Label("Rate");
 	
+	private Button newEpisodeButton = new Button("new episode");
+	
+	private ContentPanel contentPanel;
+	
+	Map<String, EpisodeDto> titleEpisodeMapping = new HashMap<String, EpisodeDto>();
+	
+	
+	
 	public RegisteredEntityPanel() {
-		initComponents();
 	}
 	
-	public void initComponents() {
-	}
-	
-	public void showEntity(SeriesDto entity) {
+	public void showSeries(final SeriesDto entity) {
 		clear();
+		
+		UserDto user = contentPanel.getMainPanel().getUser();
 		
 		add(titleLabel);
 		add(descriptionLabel);
@@ -55,5 +70,72 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		add(grid);
 		
 		add(grid2);
+		
+		add(new Label("Episodes:"));
+		
+		if(entity.getEpisodes().isEmpty()) {
+			add(new Label("No episode found!"));
+		} else {
+			
+			for(EpisodeDto episode : entity.getEpisodes()) {
+				titleEpisodeMapping.put(episode.getTitle(), episode);
+				
+				final Anchor anchor = new Anchor(episode.getTitle());
+				anchor.addClickHandler(new ClickHandler() {
+					
+					public void onClick(ClickEvent event) {
+						showEpisode(titleEpisodeMapping.get(anchor.getText()));
+					}
+				});
+				add(anchor);
+			}
+		}
+		
+		newEpisodeButton.addClickHandler(new ClickHandler() {
+			
+			public void onClick(ClickEvent event) {
+				contentPanel.setActSeries(entity);
+				contentPanel.showCreateEpisode();
+			}
+		});
+		
+		add(newEpisodeButton);
+		
+		if(user == null) {
+			newEpisodeButton.setVisible(false);
+		} else {
+			newEpisodeButton.setVisible(true);
+		}
+	}
+	
+	public void showEpisode(EpisodeDto episode) {
+		clear();
+		
+		add(titleLabel);
+		add(descriptionLabel);
+		
+		titleLabel.setText(episode.getTitle());
+		descriptionLabel.setText(episode.getDescription());
+		
+		Grid grid = new Grid(2, 2);
+		grid.setWidget(0, 0, likeLabel);
+		grid.setWidget(0, 1, new Label(Long.toString(episode.getLikeCount())));
+		grid.setWidget(1, 0, rateLabel);
+		grid.setWidget(1, 1, new Label(Double.toString(episode.getRate())));
+		
+		Grid grid2 = new Grid(2, 2);
+		grid2.setWidget(0, 0, actorLabel);
+		grid2.setWidget(0, 1, new Label(episode.retrieveActorsAsString()));
+		grid2.setWidget(1, 0, keywordLabel);
+		grid2.setWidget(1, 1, new Label(episode.retrieveLabelsAsString()));
+		
+		add(grid);
+		
+		add(grid2);
+						
+	}
+	
+	public void setContentPanel(ContentPanel contentPanel) {
+		this.contentPanel = contentPanel;
 	}
 }
