@@ -52,7 +52,7 @@
    </appender>
    
    <category name="hu" additivity="false">
-      <priority value="TRACE" />
+      <priority value="DEBUG" />
       <appender-ref ref="SP" />
    </category>
    

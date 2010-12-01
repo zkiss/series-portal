@@ -97,7 +97,7 @@ public class SeriesPortalDao {
 	try {
 	    ret = (Label) this.entityManager.createQuery( //
 		    "select l from " + Label.class.getSimpleName() + " l" + //
-			    " where l.label = :label"). //
+			    " where lower(l.label) = lower(:label)"). //
 		    setParameter("label", label).getSingleResult();
 	} catch (NoResultException e) {
 	    ret = null;
