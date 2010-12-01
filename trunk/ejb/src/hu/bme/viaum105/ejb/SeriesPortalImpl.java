@@ -60,6 +60,7 @@ public class SeriesPortalImpl implements SeriesPortal {
 	HashSet<Label> labelsInDb = new HashSet<Label>();
 	for (Iterator<Label> iterator = entity.getLabels().iterator(); iterator.hasNext();) {
 	    Label label = iterator.next();
+	    label.setLabel(label.getLabel().toLowerCase());
 	    if (label.getId() == 0) {
 		Label labelInDb = dao.getLabel(label.getLabel());
 		if (labelInDb != null) {
