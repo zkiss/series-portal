@@ -68,4 +68,10 @@ public class MultipleTextInput extends HorizontalPanel {
 		
 		return copy;
 	}
+	
+	public void reset() {
+		inputList.clear();
+		inputBox.setText("");
+		inputArea.setText("");
+	}
 }

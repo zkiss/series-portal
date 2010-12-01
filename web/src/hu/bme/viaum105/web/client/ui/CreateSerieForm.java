@@ -116,5 +116,14 @@ public class CreateSerieForm extends VerticalPanel{
 	public void setErrorMessage(String message) {
 		errorMessage.setText(message);
 	}
+	
+	public void resetFields() {
+		titleField.setText("");
+		directorField.setText("");
+		actorField.reset();
+		descriptionField.setText("");
+		imdbUrlField.setText("");
+		keyWordField.reset();
+	}
 
 }
