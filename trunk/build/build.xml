@@ -7,9 +7,9 @@
 	<property name="dir-config" value="config" />
 
 	<!--
-	<target name="dist">
-	-->
 	<target name="dist" depends="dist-all">
+	-->
+	<target name="dist">
 		<delete dir="${dir-dist}" />
 		<mkdir dir="${dir-dist}" />
 
@@ -36,6 +36,10 @@
 
 			<!-- config -->
 			<zipfileset dir="${basedir}\${dir-config}" prefix="jboss" />
+
+			<!-- doksik -->
+			<zipfileset dir="${trunk}\doc\01 kov-spec" prefix="doc" includes="*.pdf" />
+			<zipfileset dir="${trunk}\doc\02 beadas" prefix="doc" includes="*.pdf" />
 		</zip>
 	</target>
 
