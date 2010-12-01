@@ -139,5 +139,15 @@ public class CreateEpisodeForm extends VerticalPanel {
 	public void setErrorMessage(String message) {
 		errorMessage.setText(message);
 	}
+	
+	public void resetFields() {
+		titleField.setText("");
+		descriptionField.setText("");
+		seasonNumberField.setText("");
+		episodeNumberField.setText("");
+		lengthField.setText("");
+		actorsField.reset();
+		keyWordsField.reset();
+	}
 
 }

@@ -66,5 +66,11 @@ public class ModifyProfilForm extends VerticalPanel {
 	public void setErrorMessage(String message) {
 		errorMessage.setText(message);
 	}
+	
+	public void resetFields() {
+		pwdField.setText("");
+		newPwdField.setText("");
+		rePwdField.setText("");
+	}
 
 }

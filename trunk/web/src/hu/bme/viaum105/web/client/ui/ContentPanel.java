@@ -38,6 +38,10 @@ public class ContentPanel extends DeckPanel {
 		
 	SeriesDto actSeries;
 	
+	final CreateSerieForm serieForm = GWT.create(CreateSerieForm.class);
+	final ModifyProfilForm profilForm = GWT.create(ModifyProfilForm.class);
+	final CreateEpisodeForm episodeForm = new CreateEpisodeForm();
+	
 	public ContentPanel() {
 		((ServiceDefTarget) userService).setServiceEntryPoint( 
 				GWT.getModuleBaseURL() + "UserService");
@@ -50,25 +54,23 @@ public class ContentPanel extends DeckPanel {
 	
 	public void initComponents() {
 		
-		final CreateSerieForm panel = GWT.create(CreateSerieForm.class);
-		
-		createSeriePanel.add(panel);
+		createSeriePanel.add(serieForm);
 		createSeriePanel.getApproveButton().setText("Submit");
 		createSeriePanel.getApproveButton().addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
-				if(panel.isValid()) {
-					panel.setErrorMessage("");
+				if(serieForm.isValid()) {
+					serieForm.setErrorMessage("");
 					
 					SeriesDto series = new SeriesDto();
-					series.setTitle(panel.getSeriesTitle());
-					series.setDirector(panel.getDirector());
-					for(String actor : panel.getActors()) {
+					series.setTitle(serieForm.getSeriesTitle());
+					series.setDirector(serieForm.getDirector());
+					for(String actor : serieForm.getActors()) {
 						series.addActor(actor);
 					}
-					series.setDescription(panel.getDescription());
-					series.setImdbUrl(panel.getImdbUrl());
-					for(String keyWord : panel.getKeyWords()) {
+					series.setDescription(serieForm.getDescription());
+					series.setImdbUrl(serieForm.getImdbUrl());
+					for(String keyWord : serieForm.getKeyWords()) {
 						series.addLabel(keyWord);
 					}
 					
@@ -88,17 +90,15 @@ public class ContentPanel extends DeckPanel {
 			}
 		});
 		
-		final ModifyProfilForm panel2 = GWT.create(ModifyProfilForm.class);
-		
-		modifyProfilPanel.add(panel2);
+		modifyProfilPanel.add(profilForm);
 		modifyProfilPanel.getApproveButton().setText("Submit");
 		modifyProfilPanel.getApproveButton().addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
 				
-				if(panel2.isValid()) {
+				if(profilForm.isValid()) {
 					
-					userService.login(mainPanel.getUser().getLoginName(), panel2.getOldPassword(), new AsyncCallback<UserDto>() {
+					userService.login(mainPanel.getUser().getLoginName(), profilForm.getOldPassword(), new AsyncCallback<UserDto>() {
 
 						public void onFailure(Throwable caught) {
 							Window.alert(caught.getLocalizedMessage());
@@ -107,11 +107,11 @@ public class ContentPanel extends DeckPanel {
 						public void onSuccess(UserDto result) {
 							
 							if(result == null) {
-								panel2.setErrorMessage("Old password is not valid");
+								profilForm.setErrorMessage("Old password is not valid");
 							
 							} else {
 								long id = mainPanel.getUser().getId();
-								String pwd = panel2.getNewPassword();
+								String pwd = profilForm.getNewPassword();
 								
 								userService.changePassword(id, pwd, new AsyncCallback<Void>() {
 									
@@ -132,8 +132,6 @@ public class ContentPanel extends DeckPanel {
 			}
 		});
 
-		final CreateEpisodeForm episodeForm = new CreateEpisodeForm();
-		
 		createEpisodePanel.add(episodeForm);
 		createEpisodePanel.getApproveButton().setText("Submit");
 		createEpisodePanel.getApproveButton().addClickHandler(new ClickHandler() {
@@ -202,10 +200,12 @@ public class ContentPanel extends DeckPanel {
 	}
 	
 	public void showCreateSerie() {
+		serieForm.resetFields();
 		showWidget(1);
 	}
 	
 	public void showProfil() {
+		profilForm.resetFields();
 		showWidget(2);
 	}
 	
@@ -222,6 +222,7 @@ public class ContentPanel extends DeckPanel {
 	}
 	
 	public void showCreateEpisode() {
+		episodeForm.resetFields();
 		showWidget(4);
 	}
 
