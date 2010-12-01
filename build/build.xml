@@ -6,6 +6,9 @@
 	<property name="dir-dist" value="dist" />
 	<property name="dir-config" value="config" />
 
+	<!--
+	<target name="dist">
+	-->
 	<target name="dist" depends="dist-all">
 		<delete dir="${dir-dist}" />
 		<mkdir dir="${dir-dist}" />
@@ -14,6 +17,7 @@
 			<!-- forrás -->
 			<zipfileset dir="${dir-common}\${src}" prefix="src\common" />
 			<zipfileset dir="${dir-ejb}\${src}" prefix="src\ejb" />
+			<zipfileset dir="${dir-schemagen}\${src}" prefix="src\schemagen" />
 			<zipfileset dir="${dir-web}\${src}" prefix="src\web\java" />
 			<zipfileset dir="${dir-web}\war" prefix="src\web\war" />
 
@@ -21,6 +25,10 @@
 			<zipfileset dir="${dir-common}\${dist}" prefix="bin" />
 			<zipfileset dir="${dir-ejb}\${dist}" prefix="bin" />
 			<zipfileset dir="${dir-web}\${dist}" prefix="bin" />
+
+			<!-- schemagen -->
+			<zipfileset dir="${dir-schemagen}\${dist}" prefix="schemagen" />
+			<zipfileset dir="${dir-lib}\hibernate" prefix="schemagen\lib" />
 
 			<!-- libek -->
 			<zipfileset dir="${dir-lib}" prefix="lib" includes="mysql-connector-java-5.0.8-bin.jar" />
@@ -42,6 +50,7 @@
 		<ant dir="${dir-common}" target="dist" />
 		<ant dir="${dir-ejb}" target="dist" />
 		<ant dir="${dir-web}" target="dist" />
+		<ant dir="${dir-schemagen}" target="dist" />
 	</target>
 
 	<target name="deploy-ejb" description="Csak az EJB deployolása. Fejlesztést elősegítő task.">

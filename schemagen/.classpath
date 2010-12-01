@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/lib/hibernate/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/dom4j.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/hibernate-annotations.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/hibernate-commons-annotations.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/hibernate-core.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/hibernate-entitymanager.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/hibernate3.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/javassist-3.9.0.GA.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="/lib/hibernate/slf4j-log4j12.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/lib-common"/>
+	<classpathentry kind="lib" path="/lib/mysql-connector-java-5.0.8-bin.jar"/>
+	<classpathentry kind="lib" path="/lib/jboss-client/log4j.jar"/>
+	<classpathentry kind="output" path="bin/eclipse"/>
+</classpath>
