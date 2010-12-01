@@ -18,6 +18,7 @@
 	<property name="dir-ejb" value="${trunk}\ejb" />
 	<property name="dir-lib-common" value="${trunk}\lib-common" />
 	<property name="dir-lib-server" value="${trunk}\lib-server" />
+	<property name="dir-schemagen" value="${trunk}\schemagen" />
 	<property name="dir-web" value="${trunk}\web" />
 
 	<path id="path-src">
