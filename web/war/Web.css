@@ -233,11 +233,13 @@ img.right {
 }
 
 .deck {
-	width: 200px;
+	width: 220px;
 	float: right;
 }
 
 .menuBar {
+	margin-top: 35px;
+	margin-bottom: 20px;
 	border: 1px solid #BBBBBB;
 	width: 400px;
 }
@@ -253,3 +255,22 @@ img.right {
 	color: #FF2222;
 	font-weight: bold;
 }
+
+.contentPanel {
+	width: 750px;
+}
+
+.entitySummary {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	}
+	
+.title {
+	margin-top: 5px;
+	font: bold 18px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: #6B6B6B;
+	}
+	
+.searchPanel {
+	margin-top: 10px;
+	}

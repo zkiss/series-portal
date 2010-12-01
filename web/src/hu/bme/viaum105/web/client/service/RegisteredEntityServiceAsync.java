@@ -25,4 +25,6 @@ public interface RegisteredEntityServiceAsync {
 	
 	void like(RegisteredEntityDto entity, UserDto user, AsyncCallback<Void> callback);
 	
+	void rate(RegisteredEntityDto entity, UserDto user, int rate, AsyncCallback<Void> callback);
+	
 }

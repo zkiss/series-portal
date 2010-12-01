@@ -32,9 +32,7 @@ public class ListPanel extends VerticalPanel {
 		LIKE,
 		TITLE,
 	}
-	
-	private Ordering ordering = Ordering.TITLE;
-	
+		
 	RegisteredEntityServiceAsync entityService = 
 		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
 	
@@ -52,6 +50,7 @@ public class ListPanel extends VerticalPanel {
 			
 			public void onChange(ChangeEvent event) {
 				orderEntities(orderingBox.getValue(orderingBox.getSelectedIndex()));
+				showList();
 			}
 		});
 		
@@ -101,6 +100,7 @@ public class ListPanel extends VerticalPanel {
 			
 			for(RegisteredEntityDto entity : listOfEntities) {
 				RegisteredEntitySummaryPanel subPanel = new RegisteredEntitySummaryPanel(entity, this);
+				subPanel.addStyleName("entitySummary");
 				add(subPanel);
 			}
 		}		
@@ -121,7 +121,14 @@ public class ListPanel extends VerticalPanel {
 			Collections.sort(listOfEntities, new Comparator<RegisteredEntityDto>() {
 
 				public int compare(RegisteredEntityDto o1, RegisteredEntityDto o2) {
-					//TODO az entitásban nincs külön megadva az értékelés
+					double r1 = (o1.getRate() == null) ? 0.0 : o1.getRate();
+					double r2 = (o2.getRate() == null) ? 0.0 : o2.getRate();
+					
+					if(r1 < r2) {
+						return 1;
+					} else if(r1 > r2) {
+						return -1;
+					}
 					
 					return 0;
 				}
@@ -132,7 +139,14 @@ public class ListPanel extends VerticalPanel {
 			Collections.sort(listOfEntities, new Comparator<RegisteredEntityDto>() {
 
 				public int compare(RegisteredEntityDto o1, RegisteredEntityDto o2) {
-					//TODO az entitásban nincs külön megadva a like
+					long l1 = o1.getLikeCount();
+					long l2 = o2.getLikeCount();
+					
+					if(l1 < l2) {
+						return 1;
+					} else if(l1 > l2) {
+						return -1;
+					}
 					
 					return 0;
 				}

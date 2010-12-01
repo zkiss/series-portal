@@ -60,6 +60,8 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		((ServiceDefTarget) entityService).setServiceEntryPoint( 
 				GWT.getModuleBaseURL() + "RegisteredEntityService");
 		
+		titleLabel.addStyleName("title");
+		
 		for(int i=1; i<11; i++) {
 			rateBox.addItem(Integer.toString(i));
 		}
@@ -84,8 +86,18 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		rateButton.addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
-				// TODO Auto-generated method stub
 				
+				int rate = Integer.valueOf(rateBox.getItemText(rateBox.getSelectedIndex()));
+				entityService.rate(entity, user, rate, new AsyncCallback<Void>() {
+
+					public void onFailure(Throwable caught) {
+						Window.alert(caught.getLocalizedMessage());
+					}
+
+					public void onSuccess(Void result) {
+						contentPanel.showBrowseSeries();
+					}
+				});
 			}
 		});
 	}

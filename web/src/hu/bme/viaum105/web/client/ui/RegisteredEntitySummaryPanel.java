@@ -20,7 +20,9 @@ public class RegisteredEntitySummaryPanel extends VerticalPanel {
 	}
 	
 	public void initComponents() {
-		add(new Label(entity.getTitle()));
+		Label l1 = new Label(entity.getTitle());
+		l1.addStyleName("title");
+		add(l1);
 		
 		add(new Label(entity.getDescription()));
 		
