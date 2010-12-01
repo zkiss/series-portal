@@ -95,5 +95,21 @@ public class RegisteredEntityServiceImpl extends RemoteServiceServlet implements
 		}
 		
 	}
+	
+	public void rate(RegisteredEntityDto entity, UserDto user, int rate) {
+		
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			RegisteredEntity converted = Converter.convert(entity);
+			User u = Converter.convert(user);
+			
+			services.rate(converted, u, rate);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

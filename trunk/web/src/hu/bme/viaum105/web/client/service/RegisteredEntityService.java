@@ -18,4 +18,6 @@ public interface RegisteredEntityService extends RemoteService {
 	void createNewEpisode(EpisodeDto episode);
 
 	void like(RegisteredEntityDto entity, UserDto user);
+	
+	void rate(RegisteredEntityDto entity, UserDto user, int rate);
 }

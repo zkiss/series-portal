@@ -82,11 +82,13 @@ public class WebMainPanel extends FlowPanel {
 		userPanel.setMainPanel(this);
 		contentPanel.setMainPanel(this);
 		
+		contentPanel.addStyleName("contentPanel");
 		
 		VerticalPanel side = new VerticalPanel();
 		side.add(userPanel);
 		side.add(searchPanel);
 		
+		searchPanel.addStyleName("searchPanel");
 		side.addStyleName("deck");
 		
 		add(side);
