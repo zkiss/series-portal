@@ -14,6 +14,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface RegisteredEntityServiceAsync {
 
+	/** Kilistázza a sorozatokat. */
 	void findAllSeries(AsyncCallback<List<SeriesDto>> callback);
 	
 	void createNewSeries(SeriesDto series, AsyncCallback<Void> callback);
