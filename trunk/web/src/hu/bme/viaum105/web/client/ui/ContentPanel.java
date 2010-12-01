@@ -7,6 +7,7 @@ import hu.bme.viaum105.web.client.service.UserServiceAsync;
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -97,22 +98,36 @@ public class ContentPanel extends DeckPanel {
 				
 				if(panel2.isValid()) {
 					
-					//TODO ellenőrizni kell a régi jelszót!
-					
-					long id = mainPanel.getUser().getId();
-					String pwd = panel2.getNewPassword();
-					
-					userService.changePassword(id, pwd, new AsyncCallback<Void>() {
-						
-						public void onSuccess(Void result) {
-							//TODO beállítani a megkapott userDTO-t
-							showBrowseSeries();
-						}
-						
+					userService.login(mainPanel.getUser().getLoginName(), panel2.getOldPassword(), new AsyncCallback<UserDto>() {
+
 						public void onFailure(Throwable caught) {
 							Window.alert(caught.getLocalizedMessage());
 						}
+
+						public void onSuccess(UserDto result) {
+							
+							if(result == null) {
+								panel2.setErrorMessage("Old password is not valid");
+							
+							} else {
+								long id = mainPanel.getUser().getId();
+								String pwd = panel2.getNewPassword();
+								
+								userService.changePassword(id, pwd, new AsyncCallback<Void>() {
+									
+									public void onSuccess(Void result) {
+										showBrowseSeries();
+									}
+									
+									public void onFailure(Throwable caught) {
+										Window.alert(caught.getLocalizedMessage());
+									}
+								});
+							}
+						}
+						
 					});
+					
 				}
 			}
 		});

@@ -2,17 +2,17 @@ package hu.bme.viaum105.web.client.ui;
 
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ModifyProfilForm extends VerticalPanel {
 	
 	private Label pwdLabel = new Label("Password");
-	private TextBox pwdField = new TextBox();
+	private PasswordTextBox pwdField = new PasswordTextBox();
 	private Label newPwdLabel = new Label("New password");
-	private TextBox newPwdField = new TextBox();
+	private PasswordTextBox newPwdField = new PasswordTextBox();
 	private Label rePwdLabel = new Label("Retype password");
-	private TextBox rePwdField = new TextBox();
+	private PasswordTextBox rePwdField = new PasswordTextBox();
 	
 	private Label errorMessage = new Label("");
 	
@@ -34,6 +34,10 @@ public class ModifyProfilForm extends VerticalPanel {
 		
 		add(grid);
 		add(errorMessage);
+	}
+	
+	public String getOldPassword() {
+		return pwdField.getText();
 	}
 	
 	public String getNewPassword() {
