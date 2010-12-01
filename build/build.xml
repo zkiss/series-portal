@@ -7,9 +7,10 @@
 	<property name="dir-config" value="config" />
 
 	<!--
+	<target name="dist">
 	<target name="dist" depends="dist-all">
 	-->
-	<target name="dist">
+	<target name="dist" depends="dist-all">
 		<delete dir="${dir-dist}" />
 		<mkdir dir="${dir-dist}" />
 
