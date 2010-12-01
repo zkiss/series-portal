@@ -109,6 +109,10 @@ public class SeriesPortalDao {
 
     private <T extends RegisteredEntity> void getLikeCntAndRates(Collection<T> entities) throws DaoException {
 	for (T entity : entities) {
+	    if (entity instanceof Series) {
+		Series s = (Series) entity;
+		this.getLikeCntAndRates(s.getEpisodes());
+	    }
 	    entity.setRate(this.getRate(entity.getId()));
 	    entity.setLikeCount(this.getLikeCount(entity.getId()));
 	}
