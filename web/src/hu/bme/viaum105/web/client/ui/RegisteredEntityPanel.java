@@ -1,18 +1,27 @@
 package hu.bme.viaum105.web.client.ui;
 
+import hu.bme.viaum105.web.client.service.RegisteredEntityService;
+import hu.bme.viaum105.web.client.service.RegisteredEntityServiceAsync;
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
+import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
 import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class RegisteredEntityPanel extends VerticalPanel {
@@ -30,20 +39,62 @@ public class RegisteredEntityPanel extends VerticalPanel {
 	private Label rateLabel = new Label("Rate");
 	
 	private Button newEpisodeButton = new Button("new episode");
+	private Button likeButton = new Button("Like");
+	
+	private ListBox rateBox = new ListBox();
+	private Button rateButton = new Button("Rate");
 	
 	private ContentPanel contentPanel;
 	
+	HorizontalPanel ratePanel = new HorizontalPanel();
+	
 	Map<String, EpisodeDto> titleEpisodeMapping = new HashMap<String, EpisodeDto>();
 	
+	RegisteredEntityDto entity;
+	UserDto user;
 	
+	RegisteredEntityServiceAsync entityService = 
+		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
 	
 	public RegisteredEntityPanel() {
+		((ServiceDefTarget) entityService).setServiceEntryPoint( 
+				GWT.getModuleBaseURL() + "RegisteredEntityService");
+		
+		for(int i=1; i<11; i++) {
+			rateBox.addItem(Integer.toString(i));
+		}
+		
+		likeButton.addClickHandler(new ClickHandler() {
+			
+			public void onClick(ClickEvent event) {
+				entityService.like(entity, user, new AsyncCallback<Void>() {
+
+					public void onFailure(Throwable caught) {
+						Window.alert(caught.getLocalizedMessage());
+					}
+
+					public void onSuccess(Void result) {
+						contentPanel.showBrowseSeries();
+					}
+
+				});
+			}
+		});
+		
+		rateButton.addClickHandler(new ClickHandler() {
+			
+			public void onClick(ClickEvent event) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 	
 	public void showSeries(final SeriesDto entity) {
 		clear();
 		
-		UserDto user = contentPanel.getMainPanel().getUser();
+		this.user = contentPanel.getMainPanel().getUser();
+		this.entity = entity;
 		
 		add(titleLabel);
 		add(descriptionLabel);
@@ -51,11 +102,20 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		titleLabel.setText(entity.getTitle());
 		descriptionLabel.setText(entity.getDescription());
 		
-		Grid grid = new Grid(2, 2);
+		Grid grid = new Grid(2, 3);
 		grid.setWidget(0, 0, likeLabel);
 		grid.setWidget(0, 1, new Label(Long.toString(entity.getLikeCount())));
+		grid.setWidget(0, 2, likeButton);
 		grid.setWidget(1, 0, rateLabel);
-		grid.setWidget(1, 1, new Label(Double.toString(entity.getRate())));
+		if(entity.getRate() == null) {
+			grid.setWidget(1, 1, new Label("unrated"));
+		} else {
+			grid.setWidget(1, 1, new Label(Double.toString(entity.getRate())));
+		}
+		
+		ratePanel.add(rateBox);
+		ratePanel.add(rateButton);
+		grid.setWidget(1, 2, ratePanel);
 		
 		Grid grid2 = new Grid(4, 2);
 		grid2.setWidget(0, 0, directorLabel);
@@ -103,13 +163,20 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		
 		if(user == null) {
 			newEpisodeButton.setVisible(false);
+			likeButton.setVisible(false);
+			ratePanel.setVisible(false);
 		} else {
 			newEpisodeButton.setVisible(true);
+			likeButton.setVisible(true);
+			ratePanel.setVisible(true);
 		}
 	}
 	
 	public void showEpisode(EpisodeDto episode) {
 		clear();
+		
+		this.user = contentPanel.getMainPanel().getUser();
+		this.entity = episode;
 		
 		add(titleLabel);
 		add(descriptionLabel);
@@ -117,11 +184,20 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		titleLabel.setText(episode.getTitle());
 		descriptionLabel.setText(episode.getDescription());
 		
-		Grid grid = new Grid(2, 2);
+		Grid grid = new Grid(2, 3);
 		grid.setWidget(0, 0, likeLabel);
 		grid.setWidget(0, 1, new Label(Long.toString(episode.getLikeCount())));
+		grid.setWidget(0, 2, likeButton);
 		grid.setWidget(1, 0, rateLabel);
-		grid.setWidget(1, 1, new Label(Double.toString(episode.getRate())));
+		if(entity.getRate() == null) {
+			grid.setWidget(1, 1, new Label("unrated"));
+		} else {
+			grid.setWidget(1, 1, new Label(Double.toString(entity.getRate())));
+		}
+		
+		ratePanel.add(rateBox);
+		ratePanel.add(rateButton);
+		grid.setWidget(1, 2, ratePanel);
 		
 		Grid grid2 = new Grid(2, 2);
 		grid2.setWidget(0, 0, actorLabel);
@@ -132,6 +208,14 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		add(grid);
 		
 		add(grid2);
+		
+		if(user == null) {
+			likeButton.setVisible(false);
+			ratePanel.setVisible(false);
+		} else {
+			likeButton.setVisible(true);
+			ratePanel.setVisible(true);
+		}
 						
 	}
 	

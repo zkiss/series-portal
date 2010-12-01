@@ -1,13 +1,17 @@
 package hu.bme.viaum105.web.server.service;
 
 import hu.bme.viaum105.data.persistent.Episode;
+import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
+import hu.bme.viaum105.data.persistent.User;
 import hu.bme.viaum105.service.SeriesPortal;
 import hu.bme.viaum105.web.client.service.RegisteredEntityService;
 import hu.bme.viaum105.web.server.ServiceLocator;
 import hu.bme.viaum105.web.server.converter.Converter;
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
+import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -73,6 +77,23 @@ public class RegisteredEntityServiceImpl extends RemoteServiceServlet implements
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void like(RegisteredEntityDto entity, UserDto user) {
+		
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			RegisteredEntity converted = Converter.convert(entity);
+			User u = Converter.convert(user);
+			
+			services.like(converted, u);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
