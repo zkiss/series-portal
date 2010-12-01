@@ -1,7 +1,9 @@
 package hu.bme.viaum105.web.client.service;
 
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
+import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import java.util.List;
 
@@ -15,4 +17,5 @@ public interface RegisteredEntityService extends RemoteService {
 	
 	void createNewEpisode(EpisodeDto episode);
 
+	void like(RegisteredEntityDto entity, UserDto user);
 }

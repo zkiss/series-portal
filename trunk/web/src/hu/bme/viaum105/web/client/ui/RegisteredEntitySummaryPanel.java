@@ -25,7 +25,11 @@ public class RegisteredEntitySummaryPanel extends VerticalPanel {
 		add(new Label(entity.getDescription()));
 		
 		add(new Label("Like: "+entity.getLikeCount()));
-		add(new Label("Rate: "+entity.getRate()));
+		if(entity.getRate() == null) {
+			add(new Label("Rate: unrated"));
+		} else {
+			add(new Label("Rate: "+entity.getRate()));
+		}
 		
 		Anchor details = new Anchor("Details");
 		details.addClickHandler(new ClickHandler() {
