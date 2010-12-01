@@ -1,5 +1,7 @@
 package hu.bme.viaum105.web.client.ui;
 
+import java.util.List;
+
 import hu.bme.viaum105.web.client.component.MultipleTextInput;
 
 import com.google.gwt.user.client.ui.Grid;
@@ -51,6 +53,30 @@ public class CreateSerieForm extends VerticalPanel{
 		
 		add(grid);
 		add(errorMessage);
+	}
+	
+	public String getSeriesTitle() {
+		return titleField.getText();
+	}
+	
+	public String getDirector() {
+		return directorField.getText();
+	}
+	
+	public List<String> getActors() {
+		return actorField.getInputList();
+	}
+	
+	public String getDescription() {
+		return descriptionField.getText();
+	}
+	
+	public String getImdbUrl() {
+		return imdbUrlField.getText();
+	}
+	
+	public List<String> getKeyWords() {
+		return keyWordField.getInputList();
 	}
 	
 	public boolean isValid() {

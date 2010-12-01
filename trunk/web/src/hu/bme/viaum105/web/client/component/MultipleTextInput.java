@@ -44,6 +44,7 @@ public class MultipleTextInput extends HorizontalPanel {
 					}
 					
 					inputList.add(inputBox.getText());
+					inputBox.setText("");
 				}
 			}
 		});

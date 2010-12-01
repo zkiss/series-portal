@@ -1,5 +1,7 @@
 package hu.bme.viaum105.web.client.ui;
 
+import hu.bme.viaum105.web.client.service.RegisteredEntityService;
+import hu.bme.viaum105.web.client.service.RegisteredEntityServiceAsync;
 import hu.bme.viaum105.web.client.service.UserService;
 import hu.bme.viaum105.web.client.service.UserServiceAsync;
 import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
@@ -18,6 +20,7 @@ public class ContentPanel extends DeckPanel {
 	WebMainPanel mainPanel;
 	
 	ApprovablePanel createSeriePanel = GWT.create(ApprovablePanel.class);
+	
 	ApprovablePanel modifyProfilPanel = GWT.create(ApprovablePanel.class);
 	
 	ListPanel listPanel = GWT.create(ListPanel.class);
@@ -25,10 +28,17 @@ public class ContentPanel extends DeckPanel {
 	RegisteredEntityPanel entityPanel = GWT.create(RegisteredEntityPanel.class);
 	
 	UserServiceAsync userService = (UserServiceAsync) GWT.create(UserService.class);
+	
+	RegisteredEntityServiceAsync entityService = 
+		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
 		
+	
 	public ContentPanel() {
 		((ServiceDefTarget) userService).setServiceEntryPoint( 
 				GWT.getModuleBaseURL() + "UserService");
+		
+		((ServiceDefTarget) entityService).setServiceEntryPoint( 
+				GWT.getModuleBaseURL() + "RegisteredEntityService");
 		
 		initComponents();
 	}
@@ -43,8 +53,30 @@ public class ContentPanel extends DeckPanel {
 			
 			public void onClick(ClickEvent event) {
 				if(panel.isValid()) {
-					//TODO létrehozzuk a dto objektumot és meghívjuk a megfelelő szolgáltatást.
 					panel.setErrorMessage("");
+					
+					SeriesDto series = new SeriesDto();
+					series.setTitle(panel.getSeriesTitle());
+					series.setDirector(panel.getDirector());
+					for(String actor : panel.getActors()) {
+						series.addActor(actor);
+					}
+					series.setDescription(panel.getDescription());
+					series.setImdbUrl(panel.getImdbUrl());
+					for(String keyWord : panel.getKeyWords()) {
+						series.addLabel(keyWord);
+					}
+					
+					entityService.createNewSeries(series, new AsyncCallback<Void>() {
+						
+						public void onSuccess(Void result) {
+							showBrowseSeries();
+						}
+						
+						public void onFailure(Throwable caught) {
+							Window.alert(caught.getLocalizedMessage());
+						}
+					});
 					
 					showBrowseSeries();
 				}
@@ -96,6 +128,7 @@ public class ContentPanel extends DeckPanel {
 	}
 	
 	public void showBrowseSeries() {
+		listPanel.searchForEntites();
 		showWidget(0);
 	}
 	

@@ -5,7 +5,6 @@ import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -25,11 +24,8 @@ public class RegisteredEntitySummaryPanel extends VerticalPanel {
 		
 		add(new Label(entity.getDescription()));
 		
-		Grid grid = new Grid(2, 2);
-		grid.setWidget(0, 0, new Label("Director: "));
-		grid.setWidget(1, 0, new Label("Actor(s): "));
-		
-		add(grid);
+		add(new Label("Like: "+entity.getLikeCount()));
+		add(new Label("Rate: "+entity.getRate()));
 		
 		Anchor details = new Anchor("Details");
 		details.addClickHandler(new ClickHandler() {
