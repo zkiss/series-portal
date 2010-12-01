@@ -28,7 +28,7 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 
     private long likeCount;
 
-    private Double rate;
+    private double rate;
 
     public ActorDto addActor(String name) {
 	ActorDto a = new ActorDto();
@@ -36,6 +36,13 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 	this.actors.add(a);
 	return a;
     }
+    
+    public LabelDto addLabel(String label) {
+    	LabelDto l = new LabelDto();
+    	l.setLabel(label);
+    	this.labels.add(l);
+    	return l;
+        }
 
     public Set<ActorDto> getActors() {
 	return this.actors;
@@ -61,7 +68,7 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 	return this.likes;
     }
 
-    public Double getRate() {
+    public double getRate() {
 	return this.rate;
     }
 
@@ -87,6 +94,32 @@ public abstract class RegisteredEntityDto extends EntityBaseDto {
 
     public void setTitle(String title) {
 	this.title = title;
+    }
+    
+    public String retrieveActorsAsString() {
+    	StringBuilder builder = new StringBuilder();
+    	
+    	for(ActorDto actor : actors) {
+    		builder.append(actor.getName());
+    		builder.append(", ");
+    	}
+    	
+    	String result = builder.toString();
+    	
+    	return result.substring(0, result.length()-2);
+    }
+    
+    public String retrieveLabelsAsString() {
+    	StringBuilder builder = new StringBuilder();
+    	
+    	for(LabelDto label : labels) {
+    		builder.append(label.getLabel());
+    		builder.append(", ");
+    	}
+    	
+    	String result = builder.toString();
+    	
+    	return result.substring(0, result.length()-2);
     }
 
 }

@@ -1,9 +1,5 @@
 package hu.bme.viaum105.web.server.converter;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.TreeMap;
-
 import hu.bme.viaum105.data.nonpersistent.Role;
 import hu.bme.viaum105.data.persistent.Actor;
 import hu.bme.viaum105.data.persistent.Comment;
@@ -29,6 +25,10 @@ import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SubtitleDataDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SubtitleDto;
 import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

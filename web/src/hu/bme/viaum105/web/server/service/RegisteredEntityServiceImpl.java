@@ -1,17 +1,14 @@
 package hu.bme.viaum105.web.server.service;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import hu.bme.viaum105.data.persistent.Series;
-import hu.bme.viaum105.service.DaoException;
 import hu.bme.viaum105.service.SeriesPortal;
-import hu.bme.viaum105.service.ServerException;
 import hu.bme.viaum105.web.client.service.RegisteredEntityService;
 import hu.bme.viaum105.web.server.ServiceLocator;
 import hu.bme.viaum105.web.server.converter.Converter;
-import hu.bme.viaum105.web.server.converter.ConverterException;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -20,46 +17,42 @@ public class RegisteredEntityServiceImpl extends RemoteServiceServlet implements
 
 	private static final long serialVersionUID = -2521223347904535867L;
 
-	public List<SeriesDto> findAllSerie() {
+	public List<SeriesDto> findAllSeries() {
 
-		System.out.println("Meghívódik az entitás szolgáltatás!");
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			List<Series> seriesList = services.listSeriesPaged(50, 0);
+			
+			List<SeriesDto> seriesDtoList = new LinkedList<SeriesDto>();
+			
+			for(Series s : seriesList) {
+				SeriesDto se = Converter.convert(s);
+				seriesDtoList.add(se);
+			}
+			
+			return seriesDtoList;
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		SeriesDto s1 = new SeriesDto();
-		s1.setTitle("Supernatural");
-		s1.setDescription("Nagyon hosszú leírás a sorozatról. " +
-				"Nagyon hosszú leírás a sorozatról. " +
-				"Nagyon hosszú leírás a sorozatról.");
-		
-		SeriesDto s2 = new SeriesDto();
-		s2.setTitle("Dexter");
-		s2.setDescription("Nagyon hosszú leírás a sorozatról. " +
-				"Nagyon hosszú leírás a sorozatról. " +
-				"Nagyon hosszú leírás a sorozatról.");
-		
-		List<SeriesDto> list = new LinkedList<SeriesDto>();
-		list.add(s1);
-		list.add(s2);
-		
-		return list;
+		return null;
 	}
 	
-	public void createNewSerie(SeriesDto serie) {
-		System.out.println("új sorozat: "+serie.getTitle());
+	public void createNewSeries(SeriesDto series) {
+		
+		System.out.println("Sorozat létrehozása: "+series.getTitle());
 		
 		try {
 			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
 			
-			Series converted = Converter.convert(serie);
+			Series converted = Converter.convert(series);
 			
 			services.save(converted);
 			
-		} catch (ServerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ConverterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DaoException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

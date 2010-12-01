@@ -13,8 +13,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface RegisteredEntityServiceAsync {
 
-	void findAllSerie(AsyncCallback<List<SeriesDto>> callback);
+	void findAllSeries(AsyncCallback<List<SeriesDto>> callback);
 	
-	void createNewSerie(SeriesDto serie, AsyncCallback<Void> callback);
+	void createNewSeries(SeriesDto series, AsyncCallback<Void> callback);
 	
 }

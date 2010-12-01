@@ -16,6 +16,7 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -42,8 +43,6 @@ public class ListPanel extends VerticalPanel {
 		
 		((ServiceDefTarget) entityService).setServiceEntryPoint( 
 				GWT.getModuleBaseURL() + "RegisteredEntityService");
-
-		searchForEntites();
 		
 		orderingBox.addItem("by title", Ordering.TITLE.toString());
 		orderingBox.addItem("by rating", Ordering.RATING.toString());
@@ -61,10 +60,14 @@ public class ListPanel extends VerticalPanel {
 	}
 	
 	public void searchForEntites() {
-		entityService.findAllSerie(new AsyncCallback<List<SeriesDto>>() {
+		entityService.findAllSeries(new AsyncCallback<List<SeriesDto>>() {
 			
 			public void onSuccess(List<SeriesDto> result) {
-				listOfEntities.addAll(result);
+				listOfEntities.clear();
+				
+				if(result != null) {
+					listOfEntities.addAll(result);					
+				}
 				showList();
 			}
 			
@@ -86,17 +89,23 @@ public class ListPanel extends VerticalPanel {
 		this.listOfEntities = listOfEntities;
 	}
 	
-	public void showList() {
-		System.out.println("A lista elemek száma "+listOfEntities.size());
+	private void showList() {
 		
 		clear();
 		
-		add(orderingBox);
+		if(listOfEntities.isEmpty()) {
+			add(new Label("No result found."));
 		
-		for(RegisteredEntityDto entity : listOfEntities) {
-			RegisteredEntitySummaryPanel subPanel = new RegisteredEntitySummaryPanel(entity, this);
-			add(subPanel);
+		} else {
+			add(orderingBox);
+			
+			for(RegisteredEntityDto entity : listOfEntities) {
+				RegisteredEntitySummaryPanel subPanel = new RegisteredEntitySummaryPanel(entity, this);
+				add(subPanel);
+			}
 		}
+		
+		System.out.println("sorozatok megjelenítve");
 	}
 	
 	public void orderEntities(String selectedOption) {
