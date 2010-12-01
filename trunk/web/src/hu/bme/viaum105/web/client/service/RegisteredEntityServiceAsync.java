@@ -1,5 +1,6 @@
 package hu.bme.viaum105.web.client.service;
 
+import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
 
 import java.util.List;
@@ -16,5 +17,7 @@ public interface RegisteredEntityServiceAsync {
 	void findAllSeries(AsyncCallback<List<SeriesDto>> callback);
 	
 	void createNewSeries(SeriesDto series, AsyncCallback<Void> callback);
+	
+	void createNewEpisode(EpisodeDto episode, AsyncCallback<Void> callback);
 	
 }

@@ -103,9 +103,7 @@ public class ListPanel extends VerticalPanel {
 				RegisteredEntitySummaryPanel subPanel = new RegisteredEntitySummaryPanel(entity, this);
 				add(subPanel);
 			}
-		}
-		
-		System.out.println("sorozatok megjelenítve");
+		}		
 	}
 	
 	public void orderEntities(String selectedOption) {
