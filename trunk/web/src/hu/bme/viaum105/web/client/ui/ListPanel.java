@@ -99,7 +99,7 @@ public class ListPanel extends VerticalPanel {
 			add(orderingBox);
 			
 			for(RegisteredEntityDto entity : listOfEntities) {
-				RegisteredEntitySummaryPanel subPanel = new RegisteredEntitySummaryPanel(entity, this);
+				RegisteredEntitySummaryPanel subPanel = new RegisteredEntitySummaryPanel(entity, this.getContentPanel());
 				subPanel.addStyleName("entitySummary");
 				add(subPanel);
 			}
