@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+   <!-- Servlets -->
+   <servlet>
+     <servlet-name>userServiceImpl</servlet-name>
+     <servlet-class>hu.bme.viaum105.web.server.service.UserServiceImpl</servlet-class>
+   </servlet>
+   
+   <servlet>
+     <servlet-name>registeredEntityServiceImpl</servlet-name>
+     <servlet-class>hu.bme.viaum105.web.server.service.RegisteredEntityServiceImpl</servlet-class>
+   </servlet>
+   
+   <servlet-mapping>
+     <servlet-name>userServiceImpl</servlet-name>
+     <url-pattern>/web/UserService</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+     <servlet-name>registeredEntityServiceImpl</servlet-name>
+     <url-pattern>/web/RegisteredEntityService</url-pattern>
+   </servlet-mapping>	
+
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Web.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

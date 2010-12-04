@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ejb" default="dist">
+
+	<import file="../build/common.xml" />
+
+	<target name="clean">
+		<delete dir="${ant}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${bin}" />
+		<javac destdir="${bin}" classpathref="path-lib-server" srcdir="${src}" encoding="${encoding}">
+			<classpath>
+				<pathelement location="${dir-common}\${bin}" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="dist" depends="clean, compile">
+		<mkdir dir="${dist}" />
+		<jar destfile="${dist}/${ant.project.name}.jar">
+			<fileset dir="src" excludes="**/*.java" />
+			<fileset dir="${bin}" />
+		</jar>
+	</target>
+
+	<target name="deploy" depends="dist">
+		<copy todir="${jboss.server}\deploy" overwrite="true">
+			<fileset dir="${dist}" />
+		</copy>
+	</target>
+
+</project>
+

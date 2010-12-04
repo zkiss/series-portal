@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-all" default="deploy">
+
+	<import file="common.xml" />
+
+	<property name="dir-dist" value="dist" />
+	<property name="dir-config" value="config" />
+
+	<!--
+	<target name="dist">
+	<target name="dist" depends="dist-all">
+	-->
+	<target name="dist" depends="dist-all">
+		<delete dir="${dir-dist}" />
+		<mkdir dir="${dir-dist}" />
+
+		<zip destfile="${dir-dist}\series-portal.zip">
+			<!-- forrás -->
+			<zipfileset dir="${dir-common}\${src}" prefix="src\common" />
+			<zipfileset dir="${dir-ejb}\${src}" prefix="src\ejb" />
+			<zipfileset dir="${dir-schemagen}\${src}" prefix="src\schemagen" />
+			<zipfileset dir="${dir-web}\${src}" prefix="src\web\java" />
+			<zipfileset dir="${dir-web}\war" prefix="src\web\war" />
+
+			<!-- bináris -->
+			<zipfileset dir="${dir-common}\${dist}" prefix="bin" />
+			<zipfileset dir="${dir-ejb}\${dist}" prefix="bin" />
+			<zipfileset dir="${dir-web}\${dist}" prefix="bin" />
+
+			<!-- schemagen -->
+			<zipfileset dir="${dir-schemagen}\${dist}" prefix="schemagen" />
+			<zipfileset dir="${dir-lib}\hibernate" prefix="schemagen\lib" />
+
+			<!-- libek -->
+			<zipfileset dir="${dir-lib}" prefix="lib" includes="mysql-connector-java-5.0.8-bin.jar" />
+			<zipfileset dir="${dir-lib}" prefix="lib" includes="commons-logging.jar" />
+
+			<!-- config -->
+			<zipfileset dir="${basedir}\${dir-config}" prefix="jboss" />
+
+			<!-- doksik -->
+			<zipfileset dir="${trunk}\doc\01 kov-spec" prefix="doc" includes="*.pdf" />
+			<zipfileset dir="${trunk}\doc\02 beadas" prefix="doc" includes="*.pdf" />
+		</zip>
+	</target>
+
+	<target name="clean-all">
+		<delete dir="${dist-all}" />
+		<ant dir="${dir-common}" target="clean" />
+		<ant dir="${dir-ejb}" target="clean" />
+		<ant dir="${dir-web}" target="clean" />
+	</target>
+
+	<target name="dist-all">
+		<ant dir="${dir-common}" target="dist" />
+		<ant dir="${dir-ejb}" target="dist" />
+		<ant dir="${dir-web}" target="dist" />
+		<ant dir="${dir-schemagen}" target="dist" />
+	</target>
+
+	<target name="deploy-ejb" description="Csak az EJB deployolása. Fejlesztést elősegítő task.">
+		<ant dir="${dir-common}" target="deploy" />
+		<ant dir="${dir-ejb}" target="deploy" />
+	</target>
+
+	<target name="deploy">
+		<ant dir="${dir-common}" target="deploy" />
+		<ant dir="${dir-ejb}" target="deploy" />
+		<ant dir="${dir-web}" target="deploy" />
+	</target>
+
+	<target name="clean-jboss">
+		<delete dir="${jboss.server}\work" />
+		<delete dir="${jboss.server}\tmp" />
+		<delete dir="${jboss.server}\data" />
+		<delete dir="${jboss.server}\log" />
+	</target>
+
+	<target name="run-jboss">
+		<exec executable="cmd" spawn="true">
+			<arg value="/c" />
+			<arg value="start" />
+			<arg value="${jboss.basedir}\bin\debug.bat" />
+			<arg value="-c" />
+			<arg value="${jboss.servername}" />
+			<arg value="-b${jboss.bind.address}" />
+		</exec>
+	</target>
+
+</project>
+

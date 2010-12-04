@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="build-common">
+
+	<exec executable="hostname" outputproperty="hostname" />
+
+	<property name="trunk" value="${basedir}\.." />
+	<property file="${trunk}\build\env-${hostname}.properties" />
+	<property name="jboss.server" value="${jboss.basedir}\server\${jboss.servername}" />
+
+	<property name="encoding" value="UTF-8" />
+	<property name="src" value="src" />
+	<property name="ant" value="bin\ant" />
+	<property name="bin" value="${ant}\classes" />
+	<property name="dist" value="${ant}\dist" />
+
+	<property name="dir-lib" value="${trunk}\lib" />
+	<property name="dir-common" value="${trunk}\common" />
+	<property name="dir-ejb" value="${trunk}\ejb" />
+	<property name="dir-lib-common" value="${trunk}\lib-common" />
+	<property name="dir-lib-server" value="${trunk}\lib-server" />
+	<property name="dir-schemagen" value="${trunk}\schemagen" />
+	<property name="dir-web" value="${trunk}\web" />
+
+	<path id="path-src">
+		<pathelement location="${src}\**\*" />
+	</path>
+
+	<path id="path-lib-common">
+		<filelist dir="${dir-lib}">
+			<file name="commons-logging.jar" />
+			<file name="ejb3-persistence.jar" />
+			<file name="jboss-javaee.jar" />
+		</filelist>
+	</path>
+
+	<path id="path-lib-server">
+		<path refid="path-lib-common" />
+	</path>
+
+</project>
+
