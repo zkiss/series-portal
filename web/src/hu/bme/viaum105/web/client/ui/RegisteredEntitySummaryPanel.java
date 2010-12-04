@@ -11,9 +11,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class RegisteredEntitySummaryPanel extends VerticalPanel {
 	
 	RegisteredEntityDto entity;
-	ListPanel parent; 
+	ContentPanel parent; 
 	
-	public RegisteredEntitySummaryPanel(RegisteredEntityDto entity, ListPanel parent) {
+	public RegisteredEntitySummaryPanel(RegisteredEntityDto entity, ContentPanel parent) {
 		this.parent = parent;
 		this.entity = entity;
 		initComponents();
@@ -37,7 +37,7 @@ public class RegisteredEntitySummaryPanel extends VerticalPanel {
 		details.addClickHandler(new ClickHandler() {
 			
 			public void onClick(ClickEvent event) {
-				parent.getContentPanel().showDetails(entity);
+				parent.showDetails(entity);
 			}
 		});
 		add(details);

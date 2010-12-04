@@ -1,5 +1,7 @@
 package hu.bme.viaum105.web.client.ui;
 
+import java.util.List;
+
 import hu.bme.viaum105.web.client.service.RegisteredEntityService;
 import hu.bme.viaum105.web.client.service.RegisteredEntityServiceAsync;
 import hu.bme.viaum105.web.client.service.UserService;
@@ -32,6 +34,8 @@ public class ContentPanel extends DeckPanel {
 	ApprovablePanel createEpisodePanel = GWT.create(ApprovablePanel.class);
 	
 	UserServiceAsync userService = (UserServiceAsync) GWT.create(UserService.class);
+	
+	SearchResultPanel searchResultPanel = GWT.create(SearchResultPanel.class);
 	
 	RegisteredEntityServiceAsync entityService = 
 		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
@@ -172,12 +176,14 @@ public class ContentPanel extends DeckPanel {
 		
 		listPanel.setContentPanel(this);
 		entityPanel.setContentPanel(this);
+		searchResultPanel.setContentPanel(this);
 		
 		add(listPanel);
 		add(createSeriePanel);
 		add(modifyProfilPanel);
 		add(entityPanel);
 		add(createEpisodePanel);
+		add(searchResultPanel);
 		
 		showBrowseSeries();
 	}
@@ -209,7 +215,6 @@ public class ContentPanel extends DeckPanel {
 		showWidget(2);
 	}
 	
-	
 	public void showDetails(RegisteredEntityDto entity) {
 		
 		if(entity instanceof SeriesDto) {
@@ -224,6 +229,11 @@ public class ContentPanel extends DeckPanel {
 	public void showCreateEpisode() {
 		episodeForm.resetFields();
 		showWidget(4);
+	}
+	
+	public void showSearchResult(List<RegisteredEntityDto> result) {
+		searchResultPanel.showList(result);
+		showWidget(5);
 	}
 
 }

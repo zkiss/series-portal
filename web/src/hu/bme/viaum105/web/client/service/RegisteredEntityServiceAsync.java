@@ -27,4 +27,13 @@ public interface RegisteredEntityServiceAsync {
 	
 	void rate(RegisteredEntityDto entity, UserDto user, int rate, AsyncCallback<Void> callback);
 	
+	void searchByTitle(String title, AsyncCallback<List<RegisteredEntityDto>> callback );
+	
+	void searchByDescription(String searchTerm, AsyncCallback<List<RegisteredEntityDto>> callback);
+	
+	void searchByDirector(String searchTerm, AsyncCallback<List<RegisteredEntityDto>> callback);
+	
+	void searchByLabel(String term, AsyncCallback<List<RegisteredEntityDto>> callback);
+	
+	void searchByActor(String actor, AsyncCallback<List<RegisteredEntityDto>> callback);
 }
