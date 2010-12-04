@@ -316,14 +316,14 @@ public class SeriesPortalDao {
 
     public List<RegisteredEntity> searchByLabels(Set<String> labels) throws DaoException {
 	TreeSet<String> labelsLowerCase = new TreeSet<String>();
-	for (String label : labels) {
-	    labelsLowerCase.add(label.toLowerCase());
+	for (String actorName : labels) {
+	    labelsLowerCase.add(actorName.toLowerCase());
 	}
 	try {
 	    List<RegisteredEntity> entities = DaoHelper.getResultList(this.entityManager.createQuery( //
 		    "select re from " + RegisteredEntity.class.getSimpleName() + " re" + //
 			    " inner join re.labels l" + //
-			    " where lower(l.label) in (:labels)"). //
+			    " where lower(l.name) in (:labels)"). //
 		    setParameter("labels", labelsLowerCase), RegisteredEntity.class);
 	    this.getLikeCntAndRates(entities);
 	    return entities;

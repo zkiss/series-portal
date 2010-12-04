@@ -82,8 +82,6 @@ public class WebMainPanel extends FlowPanel {
 		userPanel.setMainPanel(this);
 		contentPanel.setMainPanel(this);
 		
-		searchPanel.setContentPanel(contentPanel);
-		
 		contentPanel.addStyleName("contentPanel");
 		
 		VerticalPanel side = new VerticalPanel();

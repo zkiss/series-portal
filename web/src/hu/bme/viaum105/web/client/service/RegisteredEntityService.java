@@ -20,14 +20,4 @@ public interface RegisteredEntityService extends RemoteService {
 	void like(RegisteredEntityDto entity, UserDto user);
 	
 	void rate(RegisteredEntityDto entity, UserDto user, int rate);
-	
-	List<RegisteredEntityDto> searchByTitle(String title);
-	
-	List<RegisteredEntityDto> searchByDescription(String searchTerm);
-	
-	List<RegisteredEntityDto> searchByDirector(String searchTerm);
-	
-	List<RegisteredEntityDto> searchByLabel(String term);
-	
-	List<RegisteredEntityDto> searchByActor(String actor);
 }
