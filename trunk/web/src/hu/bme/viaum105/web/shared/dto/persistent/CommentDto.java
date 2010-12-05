@@ -2,8 +2,6 @@ package hu.bme.viaum105.web.shared.dto.persistent;
 
 import java.util.Date;
 
-import com.google.gwt.i18n.client.DateTimeFormat;
-
 public class CommentDto extends EntityBaseDto {
 
     private static final long serialVersionUID = -7488345130318166411L;
@@ -61,7 +59,7 @@ public class CommentDto extends EntityBaseDto {
     @Override
     public String toString() {
 	return this.toString("CommentDto") + "[" + //
-		(this.date == null ? "---" : DateTimeFormat.getFullDateFormat().format(this.date)) + //
+		(this.date == null ? "---" : this.date.toString()) + //
 		" " + this.user + //
 		": " + this.comment + "]";
     }
