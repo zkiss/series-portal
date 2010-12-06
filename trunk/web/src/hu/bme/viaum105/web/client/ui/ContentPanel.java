@@ -260,7 +260,7 @@ public class ContentPanel extends DeckPanel {
 						CommentPanel commentPanel = new CommentPanel();
 						commentPanel.showComment(comment);
 						
-						ApproveCancelPanel acPanel = new ApproveCancelPanel();
+						final ApproveCancelPanel acPanel = new ApproveCancelPanel();
 						acPanel.add(commentPanel);
 						acPanel.getApproveButton().setText("Approve");
 						acPanel.getApproveButton().addClickHandler(new ClickHandler() {
@@ -273,12 +273,28 @@ public class ContentPanel extends DeckPanel {
 									}
 
 									public void onSuccess(Void result) {
-										showCommentApprovalPanel();
+										acPanel.setVisible(false);
 									}
 								});
 							}
 						});
+						
 						acPanel.getCancelButton().setText("Delete");
+						acPanel.getCancelButton().addClickHandler(new ClickHandler() {
+							
+							public void onClick(ClickEvent event) {
+								entityService.deleteComment(comment.getId(), new AsyncCallback<Void>() {
+
+									public void onFailure(Throwable caught) {
+										Window.alert(caught.getLocalizedMessage());
+									}
+
+									public void onSuccess(Void result) {
+										acPanel.setVisible(false);
+									}
+								});
+							}
+						});
 						
 						commentApprovalPanel.add(acPanel);
 					}
