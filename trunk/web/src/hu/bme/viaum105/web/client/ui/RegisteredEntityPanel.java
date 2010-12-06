@@ -57,7 +57,7 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
 	
 	ApprovablePanel addCommentPanel = new ApprovablePanel();
-	final CommentPanel cPanel = new CommentPanel();
+	final AddCommentPanel cPanel = new AddCommentPanel();
 	
 	public RegisteredEntityPanel() {
 		((ServiceDefTarget) entityService).setServiceEntryPoint( 
