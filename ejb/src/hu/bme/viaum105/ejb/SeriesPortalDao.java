@@ -231,7 +231,8 @@ public class SeriesPortalDao {
 	try {
 	    return DaoHelper.getResultList(this.entityManager.createQuery( //
 		    "select c from " + Comment.class.getSimpleName() + " c" + //
-			    " where c.registeredEntity.id = :id" + " and c.isApproved = :approved" + //
+			    " where c.registeredEntity.id = :id" + //
+			    " and c.isApproved = :approved" + //
 			    " order by c.date desc"). //
 		    setParameter("id", registeredEntityId). //
 		    setParameter("approved", true), Comment.class);
