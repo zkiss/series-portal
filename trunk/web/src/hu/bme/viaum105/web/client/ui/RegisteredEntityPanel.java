@@ -2,12 +2,14 @@ package hu.bme.viaum105.web.client.ui;
 
 import hu.bme.viaum105.web.client.service.RegisteredEntityService;
 import hu.bme.viaum105.web.client.service.RegisteredEntityServiceAsync;
+import hu.bme.viaum105.web.shared.dto.persistent.CommentDto;
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
 import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -266,6 +268,22 @@ public class RegisteredEntityPanel extends VerticalPanel {
 	
 	public void showCommentPanel() {
 		add(addCommentPanel);
+		
+		entityService.listApprovedComments(entity.getId(), new AsyncCallback<List<CommentDto>>() {
+
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getLocalizedMessage());
+			}
+
+			public void onSuccess(List<CommentDto> result) {
+				
+				for(CommentDto comment : result) {
+					CommentPanel cPanel = new CommentPanel();
+					cPanel.showComment(comment);
+					add(cPanel);
+				}
+			}
+		});
 	}
 	
 	public void setContentPanel(ContentPanel contentPanel) {
