@@ -4,14 +4,14 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class CommentPanel extends VerticalPanel {
+public class AddCommentPanel extends VerticalPanel {
 	
 	Label commentLabel = new Label("Comment");
 	TextArea commentField = new TextArea();
 	
 	Label errorMessage = new Label("");
 	
-	public CommentPanel() {
+	public AddCommentPanel() {
 		initComponents();
 	}
 	
