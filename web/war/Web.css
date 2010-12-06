@@ -274,3 +274,17 @@ img.right {
 .searchPanel {
 	margin-top: 10px;
 	}
+	
+.commentPanel {
+	margin-top: 15px;
+	margin-bottom: 10px;
+	}
+	
+.buttonPanel {
+	margin-bottom: 10px;
+	}
+	
+.commentHeader {
+	font: bold 12px "Trebuchet MS", Arial, Helvetica, sans-serif;
+	color: #6B6B6B;
+	}
