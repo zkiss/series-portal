@@ -130,6 +130,18 @@ public class SeriesPortalImpl implements SeriesPortal {
     }
 
     @Override
+    public void deleteComment(long commentId) throws DaoException {
+	SeriesPortalImpl.log.trace("deleteComment");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    dao.deleteComment(commentId);
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
     @TransactionAttribute(TransactionAttributeType.SUPPORTS)
     public SubtitleData downloadSubtitle(long subtitleId) throws DaoException, ServerException {
 	SeriesPortalImpl.log.trace("downloadSubtitle");
@@ -203,6 +215,18 @@ public class SeriesPortalImpl implements SeriesPortal {
 		like = dao.save(like);
 	    }
 	    return like;
+	} finally {
+	    entityManager.close();
+	}
+    }
+
+    @Override
+    public List<Comment> listApprovedComments(long registeredEntityId) throws DaoException {
+	SeriesPortalImpl.log.trace("listApprovedComments");
+	EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+	try {
+	    SeriesPortalDao dao = new SeriesPortalDao(entityManager);
+	    return dao.listApprovedComments(registeredEntityId);
 	} finally {
 	    entityManager.close();
 	}

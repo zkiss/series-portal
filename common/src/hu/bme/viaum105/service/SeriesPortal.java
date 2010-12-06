@@ -57,6 +57,16 @@ public interface SeriesPortal {
     public Comment comment(RegisteredEntity registeredEntity, User user, String comment) throws DaoException;
 
     /**
+     * Komment törlése
+     * 
+     * @param commentId
+     *            komment ID
+     * @throws DaoException
+     * @throws ServerException
+     */
+    public void deleteComment(long commentId) throws DaoException;
+
+    /**
      * Felirat letöltése
      * 
      * @param subtitleId
@@ -92,7 +102,7 @@ public interface SeriesPortal {
      * @return
      * @throws DaoException
      */
-    public boolean isLoginNameAvailable(String loginName) throws DaoException;;
+    public boolean isLoginNameAvailable(String loginName) throws DaoException;
 
     /**
      * Lájkolás
@@ -102,7 +112,19 @@ public interface SeriesPortal {
      * @return
      * @throws DaoException
      */
-    public Like like(RegisteredEntity registeredEntity, User user) throws DaoException;
+    public Like like(RegisteredEntity registeredEntity, User user) throws DaoException;;
+
+    /**
+     * Elfogadott kommentek listázása
+     * 
+     * @param registeredEntityId
+     *            a sorozat/episode ID-je
+     * @return A kommentek, fordított időrendi sorrendben (a legfrissebb van
+     *         legelől)
+     * @throws DaoException
+     * @throws ServerException
+     */
+    public List<Comment> listApprovedComments(long registeredEntityId) throws DaoException, ServerException;
 
     /**
      * Visszaadja az összes sorozatot név szerint rendezve. A lekérdezés
