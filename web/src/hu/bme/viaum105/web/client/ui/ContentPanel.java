@@ -6,6 +6,7 @@ import hu.bme.viaum105.web.client.service.RegisteredEntityService;
 import hu.bme.viaum105.web.client.service.RegisteredEntityServiceAsync;
 import hu.bme.viaum105.web.client.service.UserService;
 import hu.bme.viaum105.web.client.service.UserServiceAsync;
+import hu.bme.viaum105.web.shared.dto.persistent.CommentDto;
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
@@ -18,6 +19,8 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ContentPanel extends DeckPanel {
 	
@@ -36,6 +39,8 @@ public class ContentPanel extends DeckPanel {
 	UserServiceAsync userService = (UserServiceAsync) GWT.create(UserService.class);
 	
 	SearchResultPanel searchResultPanel = GWT.create(SearchResultPanel.class);
+	
+	VerticalPanel commentApprovalPanel = new VerticalPanel();
 	
 	RegisteredEntityServiceAsync entityService = 
 		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
@@ -184,6 +189,7 @@ public class ContentPanel extends DeckPanel {
 		add(entityPanel);
 		add(createEpisodePanel);
 		add(searchResultPanel);
+		add(commentApprovalPanel);
 		
 		showBrowseSeries();
 	}
@@ -234,6 +240,58 @@ public class ContentPanel extends DeckPanel {
 	public void showSearchResult(List<RegisteredEntityDto> result) {
 		searchResultPanel.showList(result);
 		showWidget(5);
+	}
+	
+	public void showCommentApprovalPanel() {
+		commentApprovalPanel.clear();
+		
+		entityService.getUnapprovedComments(new AsyncCallback<List<CommentDto>>() {
+
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.getLocalizedMessage());
+			}
+
+			public void onSuccess(List<CommentDto> result) {
+				if(result.isEmpty()) {
+					commentApprovalPanel.add(new Label("There are no new comments."));
+				} else {
+					for(final CommentDto comment : result) {
+						
+						CommentPanel commentPanel = new CommentPanel();
+						commentPanel.showComment(comment);
+						
+						ApproveCancelPanel acPanel = new ApproveCancelPanel();
+						acPanel.add(commentPanel);
+						acPanel.getApproveButton().setText("Approve");
+						acPanel.getApproveButton().addClickHandler(new ClickHandler() {
+							
+							public void onClick(ClickEvent event) {
+								entityService.approveComment(comment.getId(), new AsyncCallback<Void>() {
+
+									public void onFailure(Throwable caught) {
+										Window.alert(caught.getLocalizedMessage());
+									}
+
+									public void onSuccess(Void result) {
+										showCommentApprovalPanel();
+									}
+								});
+							}
+						});
+						acPanel.getCancelButton().setText("Delete");
+						
+						commentApprovalPanel.add(acPanel);
+					}
+				}
+				
+				
+				showCommentApprovalWidget();
+			}
+		});
+	}
+	
+	private void showCommentApprovalWidget() {
+		showWidget(6);
 	}
 
 }

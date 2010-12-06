@@ -73,7 +73,7 @@ public class WebMainPanel extends FlowPanel {
 		commentItem.setCommand(new Command() {
 			
 			public void execute() {
-				//TODO implementálni
+				contentPanel.showCommentApprovalPanel();
 			}
 		});
 		
