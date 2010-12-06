@@ -1,5 +1,6 @@
 package hu.bme.viaum105.web.server.service;
 
+import hu.bme.viaum105.data.persistent.Comment;
 import hu.bme.viaum105.data.persistent.Episode;
 import hu.bme.viaum105.data.persistent.RegisteredEntity;
 import hu.bme.viaum105.data.persistent.Series;
@@ -8,6 +9,7 @@ import hu.bme.viaum105.service.SeriesPortal;
 import hu.bme.viaum105.web.client.service.RegisteredEntityService;
 import hu.bme.viaum105.web.server.ServiceLocator;
 import hu.bme.viaum105.web.server.converter.Converter;
+import hu.bme.viaum105.web.shared.dto.persistent.CommentDto;
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
@@ -233,6 +235,39 @@ public class RegisteredEntityServiceImpl extends RemoteServiceServlet implements
 			User cu = Converter.convert(user);
 			
 			services.comment(ce, cu, comment);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public List<CommentDto> getUnapprovedComments() {
+		List<CommentDto> result = new LinkedList<CommentDto>();
+		
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			List<Comment> list = services.listUnapprovedComments(100, 0);
+			
+			for(Comment s : list) {
+				CommentDto se = Converter.convert(s);
+				result.add(se);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public void approveComment(long commentId) {
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			services.approveComment(commentId);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

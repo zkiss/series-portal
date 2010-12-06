@@ -1,5 +1,6 @@
 package hu.bme.viaum105.web.client.service;
 
+import hu.bme.viaum105.web.shared.dto.persistent.CommentDto;
 import hu.bme.viaum105.web.shared.dto.persistent.EpisodeDto;
 import hu.bme.viaum105.web.shared.dto.persistent.RegisteredEntityDto;
 import hu.bme.viaum105.web.shared.dto.persistent.SeriesDto;
@@ -38,4 +39,8 @@ public interface RegisteredEntityServiceAsync {
 	void searchByActor(String actor, AsyncCallback<List<RegisteredEntityDto>> callback);
 	
 	void addComment(RegisteredEntityDto entity, UserDto user, String comment, AsyncCallback<Void> callback);
+	
+	void getUnapprovedComments(AsyncCallback<List<CommentDto>> callback);
+	
+	void approveComment(long commentId, AsyncCallback<Void> callback);
 }
