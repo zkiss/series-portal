@@ -8,7 +8,6 @@ import hu.bme.viaum105.web.shared.dto.persistent.UserDto;
 
 import java.util.List;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface RegisteredEntityService extends RemoteService {
@@ -38,4 +37,8 @@ public interface RegisteredEntityService extends RemoteService {
 	List<CommentDto> getUnapprovedComments();
 	
 	void approveComment(long commentId);
+	
+	void deleteComment(long commentId);
+	
+	List<CommentDto> listApprovedComments(long entityId);
 }

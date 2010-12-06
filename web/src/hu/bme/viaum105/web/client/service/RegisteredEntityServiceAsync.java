@@ -43,4 +43,8 @@ public interface RegisteredEntityServiceAsync {
 	void getUnapprovedComments(AsyncCallback<List<CommentDto>> callback);
 	
 	void approveComment(long commentId, AsyncCallback<Void> callback);
+	
+	void deleteComment(long commentId, AsyncCallback<Void> callback);
+	
+	void listApprovedComments(long entityId, AsyncCallback<List<CommentDto>> callback);
 }

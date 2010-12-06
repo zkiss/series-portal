@@ -266,12 +266,43 @@ public class RegisteredEntityServiceImpl extends RemoteServiceServlet implements
 	public void approveComment(long commentId) {
 		try {
 			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
-			
 			services.approveComment(commentId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void deleteComment(long commentId) {
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			services.deleteComment(commentId);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public List<CommentDto> listApprovedComments(long entityId) {
+		List<CommentDto> result = new LinkedList<CommentDto>();
+		
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			List<Comment> list = services.listApprovedComments(entityId);
+			
+			for(Comment s : list) {
+				CommentDto se = Converter.convert(s);
+				result.add(se);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }
