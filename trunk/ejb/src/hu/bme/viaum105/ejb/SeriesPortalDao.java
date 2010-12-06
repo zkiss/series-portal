@@ -33,6 +33,17 @@ public class SeriesPortalDao {
 	this.entityManager = entityManager;
     }
 
+    public void deleteComment(long commentId) throws DaoException {
+	try {
+	    Comment c = this.entityManager.find(Comment.class, commentId);
+	    if (c != null) {
+		this.entityManager.remove(c);
+	    }
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not delete comment #" + commentId, e);
+	}
+    }
+
     public Like findLike(RegisteredEntity registeredEntity, User user) throws DaoException {
 	List<Like> likes = DaoHelper.getResultList(this.entityManager.createQuery( //
 		"select l from " + Like.class.getSimpleName() + " l" + //
@@ -213,6 +224,18 @@ public class SeriesPortalDao {
 	    return cnt.longValue() == 0;
 	} catch (RuntimeException e) {
 	    throw new DaoException("Could not determine if login name is free: " + loginName, e);
+	}
+    }
+
+    public List<Comment> listApprovedComments(long registeredEntityId) throws DaoException {
+	try {
+	    return DaoHelper.getResultList(this.entityManager.createQuery( //
+		    "select c from " + Comment.class.getSimpleName() + " c" + //
+			    " where c.registeredEntity.id = :id" + //
+			    " order by c.date desc"). //
+		    setParameter("id", registeredEntityId), Comment.class);
+	} catch (RuntimeException e) {
+	    throw new DaoException("Could not list approved comments for entity #" + registeredEntityId, e);
 	}
     }
 
