@@ -30,4 +30,6 @@ public interface RegisteredEntityService extends RemoteService {
 	List<RegisteredEntityDto> searchByLabel(String term);
 	
 	List<RegisteredEntityDto> searchByActor(String actor);
+	
+	void addComment(RegisteredEntityDto entity, UserDto user, String comment);
 }

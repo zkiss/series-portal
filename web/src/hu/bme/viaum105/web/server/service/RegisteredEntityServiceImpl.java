@@ -223,4 +223,20 @@ public class RegisteredEntityServiceImpl extends RemoteServiceServlet implements
 		
 		return result;
 	}
+	
+	public void addComment(RegisteredEntityDto entity, UserDto user, String comment) {
+		System.out.println("komment hozzáadása.");
+		try {
+			SeriesPortal services = ServiceLocator.getInstance().getSeriesPortalService();
+			
+			RegisteredEntity ce = Converter.convert(entity);
+			User cu = Converter.convert(user);
+			
+			services.comment(ce, cu, comment);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

@@ -56,6 +56,9 @@ public class RegisteredEntityPanel extends VerticalPanel {
 	RegisteredEntityServiceAsync entityService = 
 		(RegisteredEntityServiceAsync) GWT.create(RegisteredEntityService.class);
 	
+	ApprovablePanel addCommentPanel = new ApprovablePanel();
+	final CommentPanel cPanel = new CommentPanel();
+	
 	public RegisteredEntityPanel() {
 		((ServiceDefTarget) entityService).setServiceEntryPoint( 
 				GWT.getModuleBaseURL() + "RegisteredEntityService");
@@ -98,6 +101,27 @@ public class RegisteredEntityPanel extends VerticalPanel {
 						contentPanel.showBrowseSeries();
 					}
 				});
+			}
+		});
+		
+		addCommentPanel.add(cPanel);
+		
+		addCommentPanel.getApproveButton().setText("Submit");
+		addCommentPanel.getApproveButton().addClickHandler(new ClickHandler() {
+			
+			public void onClick(ClickEvent event) {
+				if(cPanel.isValid()) {
+					entityService.addComment(entity, user, cPanel.getComment(), new AsyncCallback<Void>() {
+
+						public void onFailure(Throwable caught) {
+							Window.alert(caught.getLocalizedMessage());
+						}
+
+						public void onSuccess(Void result) {
+							contentPanel.showBrowseSeries();
+						}
+					});
+				}
 			}
 		});
 	}
@@ -173,14 +197,19 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		
 		add(newEpisodeButton);
 		
+		cPanel.reset();
+		showCommentPanel();
+		
 		if(user == null) {
 			newEpisodeButton.setVisible(false);
 			likeButton.setVisible(false);
 			ratePanel.setVisible(false);
+			addCommentPanel.setVisible(false);
 		} else {
 			newEpisodeButton.setVisible(true);
 			likeButton.setVisible(true);
 			ratePanel.setVisible(true);
+			addCommentPanel.setVisible(true);
 		}
 	}
 	
@@ -217,18 +246,26 @@ public class RegisteredEntityPanel extends VerticalPanel {
 		grid2.setWidget(1, 0, keywordLabel);
 		grid2.setWidget(1, 1, new Label(episode.retrieveLabelsAsString()));
 		
-		add(grid);
-		
+		add(grid);		
 		add(grid2);
 		
 		if(user == null) {
 			likeButton.setVisible(false);
 			ratePanel.setVisible(false);
+			addCommentPanel.setVisible(false);
 		} else {
 			likeButton.setVisible(true);
 			ratePanel.setVisible(true);
+			addCommentPanel.setVisible(true);
 		}
+		
+		cPanel.reset();
+		showCommentPanel();
 						
+	}
+	
+	public void showCommentPanel() {
+		add(addCommentPanel);
 	}
 	
 	public void setContentPanel(ContentPanel contentPanel) {

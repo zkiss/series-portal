@@ -36,4 +36,6 @@ public interface RegisteredEntityServiceAsync {
 	void searchByLabel(String term, AsyncCallback<List<RegisteredEntityDto>> callback);
 	
 	void searchByActor(String actor, AsyncCallback<List<RegisteredEntityDto>> callback);
+	
+	void addComment(RegisteredEntityDto entity, UserDto user, String comment, AsyncCallback<Void> callback);
 }
