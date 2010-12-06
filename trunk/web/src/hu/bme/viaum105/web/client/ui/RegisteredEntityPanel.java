@@ -280,6 +280,7 @@ public class RegisteredEntityPanel extends VerticalPanel {
 				for(CommentDto comment : result) {
 					CommentPanel cPanel = new CommentPanel();
 					cPanel.showComment(comment);
+					cPanel.addStyleName("commentPanel");
 					add(cPanel);
 				}
 			}

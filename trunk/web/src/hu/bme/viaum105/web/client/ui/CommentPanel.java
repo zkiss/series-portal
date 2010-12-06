@@ -15,6 +15,8 @@ public class CommentPanel extends VerticalPanel {
 	public CommentPanel() {
 		add(userName);
 		add(commentText);
+		
+		userName.addStyleName("commentHeader");
 	}
 	
 	public void showComment(CommentDto comment) {

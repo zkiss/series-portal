@@ -21,6 +21,8 @@ public class ApproveCancelPanel extends VerticalPanel {
 		buttonHolder.add(approveButton);
 		buttonHolder.add(cancelButton);
 		
+		buttonHolder.addStyleName("buttonPanel");
+		
 		super.add(buttonHolder);
 		
 	}

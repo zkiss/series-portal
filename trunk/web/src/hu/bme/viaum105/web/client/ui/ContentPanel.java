@@ -259,6 +259,7 @@ public class ContentPanel extends DeckPanel {
 						
 						CommentPanel commentPanel = new CommentPanel();
 						commentPanel.showComment(comment);
+						commentPanel.addStyleName("commentPanel");
 						
 						final ApproveCancelPanel acPanel = new ApproveCancelPanel();
 						acPanel.add(commentPanel);
